@@ -1,13 +1,10 @@
 package main
 
 import "gopkg.in/gin-gonic/gin.v1"
-import "github.com/gin-contrib/static"
 
 func main() {
 
 	router := gin.Default()
-	router.Use(static.Serve("/", static.LocalFile("../web/dist/", true)))
-
 	api := router.Group("/api")
 	{
 		api.GET("/ping", func(c *gin.Context) {
