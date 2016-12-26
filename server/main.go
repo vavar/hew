@@ -15,17 +15,16 @@ func main() {
 	env := os.Getenv("ENVIRONMENT")
 	viper.SetConfigName(env)
 	viper.AddConfigPath("config")
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(fmt.Errorf("Failed to read the config file: %s\n", err))
+
+	Err := viper.ReadInConfig()
+	if Err != nil {
+		panic(fmt.Errorf("Failed to read the config file: %s", Err))
 	}
 
-	// DB = InitDBConnection()
+	DB = InitDBConnection()
 
 	router := gin.Default()
 	api := router.Group("/api")
-	{
-	}
 
 	user := api.Group("/user")
 	{
