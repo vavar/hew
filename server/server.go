@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"github.com/gin-contrib/static"
 	"github.com/spf13/viper"
 	"gopkg.in/gin-gonic/gin.v1"
 )
@@ -18,8 +17,6 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(static.Serve("/", static.LocalFile("../web/dist/", true)))
-
 	api := router.Group("/api")
 	{
 		api.GET("/ping", func(c *gin.Context) {
@@ -35,5 +32,5 @@ func main() {
 		})
 	}
 
-	router.Run(":80") // listen and serve on 0.0.0.0:80
+	router.Run() // listen and serve on 0.0.0.0:80
 }
