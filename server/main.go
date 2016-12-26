@@ -20,22 +20,24 @@ func main() {
 		panic(fmt.Errorf("Failed to read the config file: %s\n", err))
 	}
 
-	DB = InitDBConnection()
+	// DB = InitDBConnection()
 
 	router := gin.Default()
 	api := router.Group("/api")
 	{
-		api.GET("/ping", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "pong pong pong asdasda ssss ",
-			})
-		})
+	}
 
-		api.GET("/pong", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "pong pong pong asdasda ssss ",
-			})
-		})
+	user := api.Group("/user")
+	{
+		userService := newUserService(DB)
+		user.GET("/profile", userService.Profile)
+	}
+
+	admin := api.Group("/admin")
+	{
+		adminService := newAdminService(DB)
+		admin.GET("/users", adminService.Users)
+		admin.GET("/restuarants", adminService.Restaurants)
 	}
 
 	router.Run() // listen and serve on 0.0.0.0:80
