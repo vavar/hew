@@ -1,5 +1,0 @@
-{
-    "go.buildOnSave": false,
-    "go.lintOnSave": false,
-    "go.gopath": "/usr/local/Cellar/go/1.7.4"
-}
