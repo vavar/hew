@@ -23,5 +23,5 @@ func main() {
 		})
 	}
 
-	router.Run() // listen and serve on 0.0.0.0:8080
+	router.Run(80) // listen and serve on 0.0.0.0:80
 }
