@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+
 	"github.com/spf13/viper"
 	"gopkg.in/gin-gonic/gin.v1"
 )
@@ -10,7 +11,7 @@ import (
 func main() {
 	env := os.Getenv("ENVIRONMENT")
 	viper.SetConfigName(env)
-	viper.AddConfigPath("server/config")
+	viper.AddConfigPath("config")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("Failed to read the config file: %s\n", err))
