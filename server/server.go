@@ -1,16 +1,27 @@
 package main
 
-import "github.com/kataras/iris"
+import "gopkg.in/gin-gonic/gin.v1"
+import "github.com/gin-contrib/static"
 
 func main() {
 
-	iris.Get("/hi", func(ctx *iris.Context) {
-		ctx.Write("Hi %s", "iris")
-	})
+	router := gin.Default()
+	router.Use(static.Serve("/", static.LocalFile("../web/dist/", true)))
 
-	iris.Get("/helloworld", func(ctx *iris.Context) {
-		ctx.Write("Hi %s", "iris")
-	})
+	api := router.Group("/api")
+	{
+		api.GET("/ping", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"message": "pong pong pong asdasda ssss ",
+			})
+		})
 
-	iris.Listen(":8080")
+		api.GET("/pong", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"message": "pong pong pong asdasda ssss ",
+			})
+		})
+	}
+
+	router.Run() // listen and serve on 0.0.0.0:8080
 }
