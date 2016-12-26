@@ -1,5 +1,6 @@
 {
     "db": {
+        "host": "localhost",
         "user": "hew",
         "dbname": "hew"
     }

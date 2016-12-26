@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 	"gopkg.in/gin-gonic/gin.v1"
 )
+
+var DB *gorm.DB
 
 func main() {
 	env := os.Getenv("ENVIRONMENT")
@@ -16,6 +19,8 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("Failed to read the config file: %s\n", err))
 	}
+
+	DB = InitDBConnection()
 
 	router := gin.Default()
 	api := router.Group("/api")
