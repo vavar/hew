@@ -1,9 +1,21 @@
 package main
 
-import "gopkg.in/gin-gonic/gin.v1"
-import "github.com/gin-contrib/static"
+import (
+	"fmt"
+	"os"
+	"github.com/gin-contrib/static"
+	"github.com/spf13/viper"
+	"gopkg.in/gin-gonic/gin.v1"
+)
 
 func main() {
+	env := os.Getenv("ENVIRONMENT")
+	viper.SetConfigName(env)
+	viper.AddConfigPath("server/config")
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(fmt.Errorf("Failed to read the config file: %s\n", err))
+	}
 
 	router := gin.Default()
 	router.Use(static.Serve("/", static.LocalFile("../web/dist/", true)))
