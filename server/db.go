@@ -33,22 +33,9 @@ func InitDBConnection() *Database {
 	return &Database{db}
 }
 
-//FindOrganizationByID retrieves the organization from the database
-func (database *Database) FindOrganizationByID(organization *Organization, id int) error {
-	err := database.DB.Preload("Users").
-		Preload("Activities").
-		First(organization, id).Error
-
-	if err != nil {
-		return fmt.Errorf("Failed to find an organization with ID = %d: %s", id, err)
-	}
-
-	return nil
-}
-
 //Create - Create an Object
 func (database *Database) Create(object interface{}) error {
-	if err := database.DB.Create(&object).Error; err != nil {
+	if err := database.DB.Create(object).Error; err != nil {
 		return fmt.Errorf("Failed to create a '%s' : %s", reflect.TypeOf(object), err)
 	}
 
@@ -63,19 +50,14 @@ func (database *Database) Update(object interface{}) error {
 	return nil
 }
 
-//CreateOrganization - Create an organization
-func (database *Database) CreateOrganization(organization *Organization) error {
-	if err := database.DB.Create(organization).Error; err != nil {
-		return fmt.Errorf("Failed to create a new organization: %s", err)
-	}
+//FindOrganizationByID retrieves the organization from the database
+func (database *Database) FindOrganizationByID(organization *Organization, id int) error {
+	err := database.DB.Preload("Users").
+		Preload("Activities").
+		First(organization, id).Error
 
-	return nil
-}
-
-//UpdateOrganization - Update an organization
-func (database *Database) UpdateOrganization(organization *Organization) error {
-	if err := database.DB.Model(organization).Updates(organization).Error; err != nil {
-		return fmt.Errorf("Failed to update an organization with ID = %d: %s", organization.ID, err)
+	if err != nil {
+		return fmt.Errorf("Failed to find an organization with ID = %d: %s", id, err)
 	}
 
 	return nil
