@@ -58,7 +58,16 @@ func (service *RestaurantService) UpdateRestaurant(c *gin.Context) {
 
 //CreateMenu - add new Menu
 func (service *RestaurantService) CreateMenu(c *gin.Context) {
-
+	var menuJSON Menu
+	if bindErr := c.BindJSON(menuJSON); bindErr != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": bindErr})
+		return
+	}
+	if err := service.DB.Create(menuJSON); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		return
+	}
+	c.JSON(http.StatusOK, menuJSON)
 }
 
 //UpdateMenu - update exists Menu

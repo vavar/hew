@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 
 	"log"
 
@@ -42,6 +43,23 @@ func (database *Database) FindOrganizationByID(organization *Organization, id in
 		return fmt.Errorf("Failed to find an organization with ID = %d: %s", id, err)
 	}
 
+	return nil
+}
+
+//Create - Create an Object
+func (database *Database) Create(object interface{}) error {
+	if err := database.DB.Create(&object).Error; err != nil {
+		return fmt.Errorf("Failed to create a '%s' : %s", reflect.TypeOf(object), err)
+	}
+
+	return nil
+}
+
+//Update - Update an organization
+func (database *Database) Update(object interface{}) error {
+	if err := database.DB.Model(object).Updates(object).Error; err != nil {
+		return fmt.Errorf("Failed to update '%s' : %s", reflect.TypeOf(object), err)
+	}
 	return nil
 }
 
