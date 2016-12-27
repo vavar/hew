@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
-var DB *gorm.DB
+var DB *Database
 
 func main() {
 	env := os.Getenv("ENVIRONMENT")

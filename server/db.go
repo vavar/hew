@@ -7,7 +7,11 @@ import (
     "github.com/spf13/viper"
 )
 
-func InitDBConnection() *gorm.DB {
+type Database struct {
+    DB *gorm.DB
+}
+
+func InitDBConnection() *Database {
     host := viper.GetString("db.host")
     user := viper.GetString("db.user")
     dbname := viper.GetString("db.dbname")
@@ -18,5 +22,5 @@ func InitDBConnection() *gorm.DB {
     }
     defer db.Close()
 
-    return db
+    return &Database{db}
 }

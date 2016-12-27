@@ -3,16 +3,15 @@ package main
 import (
 	"net/http"
 
-	"github.com/jinzhu/gorm"
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
 //AdminService data type
 type AdminService struct {
-	DB *gorm.DB
+	DB *Database
 }
 
-func newAdminService(db *gorm.DB) *AdminService {
+func newAdminService(db *Database) *AdminService {
 	return &AdminService{db}
 }
 

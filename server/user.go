@@ -1,15 +1,14 @@
 package main
 
-import "github.com/jinzhu/gorm"
 import "gopkg.in/gin-gonic/gin.v1"
 import "net/http"
 
 //AdminService data type
 type UserService struct {
-	DB *gorm.DB
+	DB *Database
 }
 
-func newUserService(db *gorm.DB) *UserService {
+func newUserService(db *Database) *UserService {
 	return &UserService{db}
 }
 
