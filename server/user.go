@@ -11,12 +11,20 @@ type UserService struct {
 	DB *Database
 }
 
-func newUserService(db *Database) *UserService {
+//NewUserService - Instantiate User Service
+func NewUserService(db *Database) *UserService {
 	return &UserService{db}
 }
 
-//GetProfile - User Profile
-func (service *UserService) GetProfile(c *gin.Context) {
+//GetByID - User Profile by ID
+func (service *UserService) GetByID(c *gin.Context) {
+	org := &Organization{1, "test"}
+	jsonObject := &User{1, "chue", "a@a.com", org}
+	c.JSON(http.StatusOK, jsonObject)
+}
+
+//AddUser - User Profile by ID
+func (service *UserService) AddUser(c *gin.Context) {
 	org := &Organization{1, "test"}
 	jsonObject := &User{1, "chue", "a@a.com", org}
 	c.JSON(http.StatusOK, jsonObject)

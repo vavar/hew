@@ -8,10 +8,12 @@ import (
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
+//DB - Database Pointer
 var DB *Database
 
 var restaurantService *RestaurantService
 var userService *UserService
+var activityService *ActivityService
 
 func main() {
 	env := os.Getenv("ENVIRONMENT")
@@ -24,29 +26,30 @@ func main() {
 	}
 
 	DB = InitDBConnection()
-	userService := newUserService(DB)
-	restaurantService := newRestuarantService(DB)
+	userService = NewUserService(DB)
+	restaurantService = NewRestuarantService(DB)
 
 	router := gin.Default()
 	api := router.Group("/api")
-	{
-	}
 
-	user := api.Group("/user")
-	{
-		user.GET("/profile", userService.GetProfile)
-	}
+	api.GET("/users", userService.ListUsers)
+	api.POST("/users", userService.AddUser)
+	api.GET("/users/:id", userService.GetByID)
 
-	restaurant := api.Group("/restuarant")
-	{
-		restaurant.GET("/info", restaurantService.GetByID)
-	}
+	api.GET("/restaurants", restaurantService.ListRestaurants)
+	api.POST("/restaurants", restaurantService.CreateRestaurant)
+	api.GET("/restaurants/:id", restaurantService.GetByID)
 
-	admin := api.Group("/admin")
-	{
-		admin.GET("/users", userService.ListUsers)
-		admin.GET("/restuarants", restaurantService.ListRestaurants)
-	}
+	api.POST("/menus", restaurantService.CreateMenu)
+	api.PUT("/menus", restaurantService.UpdateMenu)
+
+	api.GET("/activities", activityService.ListActivities)
+	api.POST("/activities", activityService.CreateActivity)
+	api.PUT("/activities", activityService.UpdateActivity)
+
+	api.GET("/orders", activityService.ListOrderItem)
+	api.POST("/orders", activityService.CreateOrderItem)
+	api.PUT("/orders", activityService.UpdateOrderItem)
 
 	router.Run() // listen and serve on 0.0.0.0:80
 }

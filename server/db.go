@@ -8,10 +8,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+//Database - DB Instance
 type Database struct {
 	DB *gorm.DB
 }
 
+//InitDBConnection - init Database Connection
 func InitDBConnection() *Database {
 	host := viper.GetString("db.host")
 	user := viper.GetString("db.user")

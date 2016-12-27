@@ -30,7 +30,7 @@ type Menu struct {
 	Price int    `json:"price"`
 }
 
-//Order in System
+//Activity in System
 type Activity struct {
 	ID           int           `json:"id"`
 	Name         string        `json:"name"`

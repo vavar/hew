@@ -1,6 +1,11 @@
 # hew
 hew platform
 
+# Install Backends
+```bash
+$ ./setup.sh
+```
+
 # Install Web application
 
 ```bash
