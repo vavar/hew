@@ -34,3 +34,13 @@ func InitDBConnection() *Database {
 func (database *Database) GetOrganizationByID(organization *Organization, id int) {
 	database.DB.First(organization, id)
 }
+
+//ListRestaurants - database wrapper
+func (database *Database) ListRestaurants() ([]Restaurant, error) {
+	return []Restaurant{}, nil
+}
+
+//FindRestaurantByID - Restaurant by ID
+func (database *Database) FindRestaurantByID(id string) (Restaurant, error) {
+	return Restaurant{}, nil
+}
