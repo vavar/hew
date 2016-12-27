@@ -48,10 +48,9 @@ func (database *Database) FindOrganizationByID(organization *Organization, id in
 
 //Create - Create an Object
 func (database *Database) Create(object interface{}) error {
-	if err := database.DB.Create(&object).Error; err != nil {
+	if err := database.DB.Create(object).Error; err != nil {
 		return fmt.Errorf("Failed to create a '%s' : %s", reflect.TypeOf(object), err)
 	}
-
 	return nil
 }
 
