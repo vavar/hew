@@ -6,6 +6,12 @@ import (
 
 //ActivityService - activity service
 type ActivityService struct {
+	DB *Database
+}
+
+//NewActivityService - Instantiate Activity Service
+func NewActivityService(db *Database) *ActivityService {
+	return &ActivityService{db}
 }
 
 //ListActivities - list related activity

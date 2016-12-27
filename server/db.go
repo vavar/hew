@@ -34,17 +34,27 @@ func InitDBConnection() *Database {
 
 //FindOrganizationByID retrieves the organization from the database
 func (database *Database) FindOrganizationByID(organization *Organization, id int) error {
-	database.DB.Preload("Users").
+	err := database.DB.Preload("Users").
 		Preload("Activities").
-		First(organization, id)
+		First(organization, id).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to find an organization with ID = %d: %s", id, err)
+	}
+
 	return nil
 }
 
 //ListRestaurants - database wrapper
 func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
-	database.DB.Preload("Menus").
+	err := database.DB.Preload("Menus").
 		Preload("Activities").
-		Find(restaurants)
+		Find(restaurants).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to select all restaurants: %s", err)
+	}
+
 	return nil
 }
 
@@ -77,11 +87,16 @@ func (database *Database) UpdateRestaurant(restaurant *Restaurant) error {
 	return nil
 }
 
-//GetRestaurantByID - Restaurant by ID
-func (database *Database) GetRestaurantByID(restaurant *Restaurant, id int) error {
-	database.DB.Preload("Menus").
+//FindRestaurantByID - Restaurant by ID
+func (database *Database) FindRestaurantByID(restaurant *Restaurant, id int) error {
+	err := database.DB.Preload("Menus").
 		Preload("Activities").
-		First(restaurant, id)
+		First(restaurant, id).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to find a restaurant with ID = %d: %s", id, err)
+	}
+
 	return nil
 }
 
