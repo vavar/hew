@@ -41,6 +41,8 @@ func main() {
 	api.GET("/users/:id", userService.GetByID)
 
 	api.GET("/organizations/:id", organizationService.GetByID)
+	api.POST("/organizations", organizationService.CreateOrganization)
+	api.PUT("/organizations", organizationService.UpdateOrganization)
 
 	api.GET("/restaurants", restaurantService.ListRestaurants)
 	api.POST("/restaurants", restaurantService.CreateRestaurant)

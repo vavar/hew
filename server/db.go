@@ -43,6 +43,24 @@ func (database *Database) FindOrganizationByID(organization *Organization, id in
 	return nil
 }
 
+//CreateOrganization - Create an organization
+func (database *Database) CreateOrganization(organization *Organization) error {
+	if err := database.DB.Create(organization).Error; err != nil {
+		return fmt.Errorf("Failed to create a new organization: %s", err)
+	}
+
+	return nil
+}
+
+//UpdateOrganization - Update an organization
+func (database *Database) UpdateOrganization(organization *Organization) error {
+	if err := database.DB.Model(organization).Updates(organization).Error; err != nil {
+		return fmt.Errorf("Failed to update an organization with ID = %d: %s", organization.ID, err)
+	}
+
+	return nil
+}
+
 //ListRestaurants - database wrapper
 func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
 	err := database.DB.Preload("Menus").
