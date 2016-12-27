@@ -11,12 +11,12 @@ type RestaurantService struct {
 	DB *Database
 }
 
-//NewRestuarantService - Instantiate Restaurant Service
-func NewRestuarantService(db *Database) *RestaurantService {
+//NewRestaurantService - Instantiate Restaurant Service
+func NewRestaurantService(db *Database) *RestaurantService {
 	return &RestaurantService{db}
 }
 
-//ListRestaurants - list restuarant in System
+//ListRestaurants - list Restaurant in System
 func (service *RestaurantService) ListRestaurants(c *gin.Context) {
 
 	restaurants, err := service.DB.ListRestaurants()
@@ -25,7 +25,7 @@ func (service *RestaurantService) ListRestaurants(c *gin.Context) {
 		return
 	}
 	// jsonObject := struct {
-	// 	Restuarants []*Restaurant `json:"restaurants"`
+	// 	Restaurants []*Restaurant `json:"restaurants"`
 	// }{[]*Restaurant{rests}}
 	c.JSON(http.StatusOK, restaurants)
 }

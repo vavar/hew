@@ -28,7 +28,7 @@ func main() {
 	DB = InitDBConnection()
 	defer DB.DB.Close()
 	userService = NewUserService(DB)
-	restaurantService = NewRestuarantService(DB)
+	restaurantService = NewRestaurantService(DB)
 
 	router := gin.Default()
 	api := router.Group("/api")
