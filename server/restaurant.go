@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"gopkg.in/gin-gonic/gin.v1"
 )
@@ -18,8 +19,8 @@ func NewRestaurantService(db *Database) *RestaurantService {
 
 //ListRestaurants - list Restaurant in System
 func (service *RestaurantService) ListRestaurants(c *gin.Context) {
-
-	restaurants, err := service.DB.ListRestaurants()
+	var restaurants []Restaurant
+	err := service.DB.ListRestaurants(&restaurants)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return
@@ -47,7 +48,13 @@ func (service *RestaurantService) UpdateMenu(c *gin.Context) {
 
 //GetByID - get Restaurant by ID
 func (service *RestaurantService) GetByID(c *gin.Context) {
-	restaurant, err := service.DB.FindRestaurantByID(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{})
+	}
+
+	var restaurant Restaurant
+	err = service.DB.FindRestaurantByID(&restaurant, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return

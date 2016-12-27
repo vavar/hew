@@ -31,16 +31,19 @@ func InitDBConnection() *Database {
 }
 
 //GetOrganizationByID retrieves the organization from the database
-func (database *Database) GetOrganizationByID(organization *Organization, id int) {
+func (database *Database) GetOrganizationByID(organization *Organization, id int) error {
 	database.DB.First(organization, id)
+	return nil
 }
 
 //ListRestaurants - database wrapper
-func (database *Database) ListRestaurants() ([]Restaurant, error) {
-	return []Restaurant{}, nil
+func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
+	database.DB.Find(restaurants)
+	return nil
 }
 
 //FindRestaurantByID - Restaurant by ID
-func (database *Database) FindRestaurantByID(id string) (Restaurant, error) {
-	return Restaurant{}, nil
+func (database *Database) FindRestaurantByID(restaurant *Restaurant, id int) error {
+	database.DB.First(restaurant, id)
+	return nil
 }
