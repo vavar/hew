@@ -51,6 +51,7 @@ func (service *RestaurantService) GetByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
 	}
 
 	var restaurant Restaurant
