@@ -1,3 +1,10 @@
 .vscode
 .idea
 gin-bin
+
+###########
+# GOLang Ignored
+###########
+pkg/
+src/
+bin/

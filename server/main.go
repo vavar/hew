@@ -10,6 +10,9 @@ import (
 
 var DB *Database
 
+var restaurantService *RestaurantService
+var userService *UserService
+
 func main() {
 	env := os.Getenv("ENVIRONMENT")
 	viper.SetConfigName(env)
@@ -21,21 +24,28 @@ func main() {
 	}
 
 	DB = InitDBConnection()
+	userService := newUserService(DB)
+	restaurantService := newRestuarantService(DB)
 
 	router := gin.Default()
 	api := router.Group("/api")
+	{
+	}
 
 	user := api.Group("/user")
 	{
-		userService := newUserService(DB)
-		user.GET("/profile", userService.Profile)
+		user.GET("/profile", userService.GetProfile)
+	}
+
+	restaurant := api.Group("/restuarant")
+	{
+		restaurant.GET("/info", restaurantService.GetByID)
 	}
 
 	admin := api.Group("/admin")
 	{
-		adminService := newAdminService(DB)
-		admin.GET("/users", adminService.Users)
-		admin.GET("/restuarants", adminService.Restaurants)
+		admin.GET("/users", userService.ListUsers)
+		admin.GET("/restuarants", restaurantService.ListRestaurants)
 	}
 
 	router.Run() // listen and serve on 0.0.0.0:80
