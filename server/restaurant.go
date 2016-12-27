@@ -43,6 +43,12 @@ func (service *RestaurantService) CreateMenu(c *gin.Context) {
 
 //UpdateMenu - update exists Menu
 func (service *RestaurantService) UpdateMenu(c *gin.Context) {
+	var json *Menu
+	if c.BindJSON(&json) == nil {
+		if service.DB.UpdateMenu(json) == nil {
+			c.JSON(http.StatusOK, json)
+		}
+	}
 
 }
 
@@ -55,7 +61,7 @@ func (service *RestaurantService) GetByID(c *gin.Context) {
 	}
 
 	var restaurant Restaurant
-	err = service.DB.FindRestaurantByID(&restaurant, id)
+	err = service.DB.GetRestaurantByID(&restaurant, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return

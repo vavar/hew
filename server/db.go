@@ -46,10 +46,32 @@ func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
 	return nil
 }
 
-//FindRestaurantByID - Restaurant by ID
-func (database *Database) FindRestaurantByID(restaurant *Restaurant, id int) error {
+//GetRestaurantByID - Restaurant by ID
+func (database *Database) GetRestaurantByID(restaurant *Restaurant, id int) error {
 	database.DB.Preload("Menus").
 		Preload("Activities").
 		First(restaurant, id)
+	return nil
+}
+
+//UpdateMenu - update menu
+func (database *Database) UpdateMenu(menu *Menu) error {
+	var dbMenu Menu
+	err := database.DB.Model(&dbMenu).
+		Where("id = ?", menu.ID).
+		Updates(map[string]interface{}{"name": menu.Name, "price": menu.Price}).
+		Error
+	if err != nil {
+		return fmt.Errorf("Failed to update Menu: %s", err)
+	}
+	return nil
+}
+
+//DeleteMenu - delete menu
+func (database *Database) DeleteMenu(menu *Menu) error {
+	err := database.DB.Delete(Menu{}, "ID = ?", menu.ID).Error
+	if err != nil {
+		return fmt.Errorf("Failed to delete menu: %s", err)
+	}
 	return nil
 }
