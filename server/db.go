@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"log"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/spf13/viper"
@@ -71,6 +73,35 @@ func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
 		return fmt.Errorf("Failed to select all restaurants: %s", err)
 	}
 
+	return nil
+}
+
+//CreateRestaurant - create Restaurant
+func (database *Database) CreateRestaurant(restaurant *Restaurant) error {
+	if err := database.DB.Create(restaurant).Error; err != nil {
+		log.Printf("Failed to create Restaurant : %s", err)
+		return fmt.Errorf("Failed to create Restaurant")
+	}
+	return nil
+}
+
+//UpdateRestaurant - update Restaurant
+func (database *Database) UpdateRestaurant(restaurant *Restaurant) error {
+	tx := database.DB.Begin()
+	var restaurantDAO Restaurant
+	if err := database.DB.First(&restaurantDAO, restaurant.ID).Error; err != nil {
+		log.Printf("Record does not exists : %s", err)
+		tx.Rollback()
+		return fmt.Errorf("Record does not exists")
+	}
+
+	restaurantDAO.Name = restaurant.Name
+	if err := database.DB.Save(restaurantDAO).Error; err != nil {
+		log.Printf("Failed to Save Data : %s", err)
+		tx.Rollback()
+		return fmt.Errorf("Failed to Update Restaurant Data")
+	}
+	tx.Commit()
 	return nil
 }
 
