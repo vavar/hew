@@ -30,20 +30,26 @@ func InitDBConnection() *Database {
 	return &Database{db}
 }
 
-//GetOrganizationByID retrieves the organization from the database
-func (database *Database) GetOrganizationByID(organization *Organization, id int) error {
-	database.DB.First(organization, id)
+//FindOrganizationByID retrieves the organization from the database
+func (database *Database) FindOrganizationByID(organization *Organization, id int) error {
+	database.DB.Preload("Users").
+		Preload("Activities").
+		First(organization, id)
 	return nil
 }
 
 //ListRestaurants - database wrapper
 func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
-	database.DB.Find(restaurants)
+	database.DB.Preload("Menus").
+		Preload("Activities").
+		Find(restaurants)
 	return nil
 }
 
 //FindRestaurantByID - Restaurant by ID
 func (database *Database) FindRestaurantByID(restaurant *Restaurant, id int) error {
-	database.DB.First(restaurant, id)
+	database.DB.Preload("Menus").
+		Preload("Activities").
+		First(restaurant, id)
 	return nil
 }
