@@ -8,12 +8,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-//Database - DB Instance
+//Database type
 type Database struct {
 	DB *gorm.DB
 }
 
-//InitDBConnection - init Database Connection
+// InitDBConnection initiates a connection to the database and migrates database schema
 func InitDBConnection() *Database {
 	host := viper.GetString("db.host")
 	user := viper.GetString("db.user")
@@ -23,7 +23,14 @@ func InitDBConnection() *Database {
 	if err != nil {
 		panic(fmt.Errorf("Failed to initiate a connection to the database: %s", err))
 	}
-	defer db.Close()
+
+	fmt.Println("Migrating database")
+	db.AutoMigrate(&User{}, &Organization{}, &Restaurant{}, &Menu{}, &Activity{}, &OrderItem{})
 
 	return &Database{db}
+}
+
+//GetOrganizationByID retrieves the organization from the database
+func (database *Database) GetOrganizationByID(organization *Organization, id int) {
+	database.DB.First(organization, id)
 }

@@ -8,7 +8,7 @@ import (
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
-//DB - Database Pointer
+//DB is an instance of Database type
 var DB *Database
 
 var restaurantService *RestaurantService
@@ -26,6 +26,7 @@ func main() {
 	}
 
 	DB = InitDBConnection()
+	defer DB.DB.Close()
 	userService = NewUserService(DB)
 	restaurantService = NewRestuarantService(DB)
 
