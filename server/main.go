@@ -39,6 +39,7 @@ func main() {
 
 	api.GET("/restaurants", restaurantService.ListRestaurants)
 	api.POST("/restaurants", restaurantService.CreateRestaurant)
+	api.PUT("/restaurants", restaurantService.UpdateRestaurant)
 	api.GET("/restaurants/:id", restaurantService.GetByID)
 
 	api.POST("/menus", restaurantService.CreateMenu)

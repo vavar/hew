@@ -33,7 +33,30 @@ func (service *RestaurantService) ListRestaurants(c *gin.Context) {
 
 //CreateRestaurant - add new Restaurant
 func (service *RestaurantService) CreateRestaurant(c *gin.Context) {
+	var restJSON Restaurant
+	if bindErr := c.BindJSON(&restJSON); bindErr != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": bindErr})
+		return
+	}
+	if err := service.DB.CreateRestaurant(&restJSON); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		return
+	}
+	c.JSON(http.StatusOK, restJSON)
+}
 
+//UpdateRestaurant - update exists Restaurant
+func (service *RestaurantService) UpdateRestaurant(c *gin.Context) {
+	var restJSON Restaurant
+	if bindErr := c.BindJSON(&restJSON); bindErr != nil || restJSON.ID <= 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": bindErr})
+		return
+	}
+	if err := service.DB.UpdateRestaurant(&restJSON); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		return
+	}
+	c.JSON(http.StatusOK, restJSON)
 }
 
 //CreateMenu - add new Menu
