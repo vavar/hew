@@ -25,9 +25,6 @@ func (service *RestaurantService) ListRestaurants(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
-	// jsonObject := struct {
-	// 	Restaurants []*Restaurant `json:"restaurants"`
-	// }{[]*Restaurant{rests}}
 	c.JSON(http.StatusOK, restaurants)
 }
 
@@ -61,7 +58,7 @@ func (service *RestaurantService) GetByID(c *gin.Context) {
 	}
 
 	var restaurant Restaurant
-	err = service.DB.GetRestaurantByID(&restaurant, id)
+	err = service.DB.FindRestaurantByID(&restaurant, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{})
 		return

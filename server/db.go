@@ -37,7 +37,7 @@ func (database *Database) FindOrganizationByID(organization *Organization, id in
 		First(organization, id).Error
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to find an organization with ID = %d: %s", id, err)
 	}
 
 	return nil
@@ -50,7 +50,7 @@ func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
 		Find(restaurants).Error
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to select all restaurants: %s", err)
 	}
 
 	return nil
@@ -63,7 +63,7 @@ func (database *Database) FindRestaurantByID(restaurant *Restaurant, id int) err
 		First(restaurant, id).Error
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to find a restaurant with ID = %d: %s", id, err)
 	}
 
 	return nil
