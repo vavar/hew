@@ -11,6 +11,7 @@ export default {
     pretendRequest(email, pass, (res) => {
       if (res.authenticated) {
         localStorage.token = res.token;
+        localStorage.role = res.role;
         if (cb) cb(true);
         this.onChange(true);
       } else {
@@ -22,6 +23,10 @@ export default {
 
   getToken() {
     return localStorage.token;
+  },
+
+  isAdmin() {
+    return localStorage.role && localStorage.role === 'admin';
   },
 
   logout(cb) {
@@ -43,6 +48,7 @@ function pretendRequest(email, pass, cb) {
       cb({
         authenticated: true,
         token: Math.random().toString(36).substring(7),
+        role: 'admin',
       });
     } else {
       cb({ authenticated: false });
