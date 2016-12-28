@@ -53,7 +53,7 @@ func (service *RestaurantService) UpdateRestaurant(c *gin.Context) {
 		return
 	}
 
-	if err := service.DB.UpdateRestaurant(&restJSON); err != nil {
+	if err := service.DB.Update(&restJSON); err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
