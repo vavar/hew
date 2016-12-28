@@ -1,98 +1,126 @@
 <template>
   <div class="page content">
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="restaurantModal">
-      <md-dialog-title>Create new restaurant</md-dialog-title>
+      <md-dialog-title>{{dialog.header}}</md-dialog-title>
 
       <md-dialog-content>
         <form>
           <md-input-container>
             <label>Name</label>
-            <md-textarea></md-textarea>
+            <md-input required v-model="restaurant.name" placeholder="Restaurant Name"></md-input>
+          </md-input-container>
+          <md-input-container>
+            <label>Phone Number</label>
+            <md-input v-model="restaurant.phone" placeholder="Phone Number"></md-input>
           </md-input-container>
         </form>
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="addRestaurant('restaurantModal')">Add</md-button>
+        <md-button class="md-primary" @click="addRestaurant('restaurantModal')">{{dialog.action}}</md-button>
         <md-button class="md-primary" @click="closeModal('restaurantModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
-    <md-table-card>
+    <md-whiteframe md-elevation="2">
       <md-toolbar>
         <h1 class="md-title">Restaurant List</h1>
         <md-button class="md-icon-button" id="custom" @click="openModal('restaurantModal')">
           <md-icon>add</md-icon>
         </md-button>
-      </md-toolbar> 
-
-      <md-table md-sort="restaurant" md-sort-type="desc" @sort="onSort">
-        <md-table-header>
-          <md-table-row>
-            <md-table-head md-sort-by="restaurant">Name</md-table-head>
-            <md-table-head md-sort-by="phone">Phone No.</md-table-head>
-            <md-table-head>action</md-table-head>
-          </md-table-row>
-        </md-table-header>
-
-        <md-table-body>
-          <md-table-row v-for="(row, rowIndex) in restaurant" :key="rowIndex" :md-item="row" md-auto-select>
-            <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex">
-              {{ column }}
-            </md-table-cell>
-            <md-table-cell>
-              <md-button class="md-icon-button">
-                <md-icon>edit</md-icon>
-              </md-button>
-            </md-table-cell>  
-          </md-table-row>
-        </md-table-body>
-      </md-table>
-
-      <md-table-pagination
-        md-size="5"
-        md-total="10"
-        md-page="1"
-        md-label="Rows"
-        md-separator="of"
-        :md-page-options="[5, 10, 25, 50]"
-        @pagination="onPagination"></md-table-pagination>
-    </md-table-card>
+      </md-toolbar>
+      <md-list>
+        <md-list-item v-for="(row, rowIndex) in restaurants">
+          <div class="image-placeholder">
+            <div class="lorem-image"></div>
+          </div>
+          <div class="md-list-text-container">
+            <span>{{row.name}}</span>
+            <span>{{row.phone || '%phone number%'}}</span>
+          </div>
+          <md-button class="md-icon-button md-list-action" @click="openEditModal('restaurantModal',rowIndex)">
+            <md-icon>create</md-icon>
+          </md-button>
+          <md-button class="md-icon-button md-list-action" >
+            <md-icon>schedule</md-icon>
+          </md-button>
+        </md-list-item>
+      </md-list>
+    </md-whiteframe>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'restaurant',
-  data: () => ({
-    restaurant: [
-      {
-        name: 'Frozen yogurt',
-        phone: '159',
+
+  export default {
+    name: 'restaurants',
+    data() {
+      return {
+        dialog: { header: '', action: '' },
+        restaurant: { id: '', name: '', phone: '' },
+      };
+    },
+    computed: {
+      restaurants() {
+        return this.$store.state.restaurants;
       },
-    ],
-  }),
-  methods: {
-    openModal(ref) {
-      this.$refs[ref].open();
     },
-    closeModal(ref) {
-      this.$refs[ref].close();
+    created() {
+      this.$store.dispatch('getRestaurants');
     },
-    addMenu() {
+    methods: {
+      openModal(ref) {
+        this.dialog.header = 'Create new restaurant';
+        this.dialog.action = 'Add';
+        this.$refs[ref].open();
+      },
+      openEditModal(ref, rowIndex) {
+        this.dialog.header = 'Update restaurant';
+        this.dialog.action = 'Update';
+        const restaurant = this.restaurants[rowIndex];
 
-    },
-    onSort() {
+        this.restaurant.id = restaurant.id;
+        this.restaurant.name = restaurant.name;
+        this.restaurant.phone = restaurant.phone;
+        this.$refs[ref].open();
+      },
+      addRestaurant(ref) {
+        this.$refs[ref].close();
+        this.$store.dispatch('updateRestaurant', this.restaurant);
+      },
+      closeModal(ref) {
+        this.$refs[ref].close();
+      },
+      addMenu() {
 
-    },
-    onPagination() {
+      },
+      onSort() {
 
+      },
+      onPagination() {
+
+      },
     },
-  },
-};
+  };
 </script>
 
 <style>
     .content {
       text-align: left;
+      margin-top: 36px;
+    }
+
+    .image-placeholder {
+        width: 128px;
+        height: 128px;
+        background: #ddd;
+        border: 1px solid grey;
+        margin-right:20px;
+    }
+    .lorem-image {
+      width: 128px;
+      height: 128px;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-image: url('http://lorempixel.com/128/128/food')
     }
 </style>

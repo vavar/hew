@@ -24,5 +24,17 @@ export default new Vuex.Store({
     getRestaurants({ commit }) {
       commit('fetchRestaurants');
     },
+    updateRestaurant(context, restaurant) {
+      if (restaurant.id) {
+        console.log('update !');
+        Vue.http.put('http://hew.abct.io/api/restaurants', restaurant, { method: 'PUT' }).then(() => {
+          context.commit('fetchRestaurants');
+        });
+      } else {
+        Vue.http.post('http://hew.abct.io/api/restaurants', restaurant).then(() => {
+          context.commit('fetchRestaurants');
+        });
+      }
+    },
   },
 });
