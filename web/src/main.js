@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import Vuex from 'vuex';
 import VueMaterial from 'vue-material';
 import VueRouter from 'vue-router';
 
@@ -16,7 +15,6 @@ import Restaurant from './components/Restaurant';
 
 Vue.use(VueMaterial);
 Vue.use(VueResource);
-Vue.use(Vuex);
 
 Vue.material.registerTheme('default', {
   primary: 'blue',
