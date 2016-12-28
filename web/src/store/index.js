@@ -4,9 +4,10 @@ import Vuex from 'vuex';
 /* global console */
 /* eslint no-console: ["error", { allow: ["warn", "error","log"] }] */
 
+const URL = 'http://hew.abct.io/api/restaurants';
+// const URL = 'http://localhost:8080/api/restaurants';
 const fetchRestaurants = function fetchRestaurants(context) {
-  // console.log(state);
-  Vue.http.get('http://hew.abct.io/api/restaurants').then((response) => {
+  Vue.http.get(URL).then((response) => {
     context.restaurants = response.body;
   });
 };
@@ -27,11 +28,12 @@ export default new Vuex.Store({
     updateRestaurant(context, restaurant) {
       if (restaurant.id) {
         console.log('update !');
-        Vue.http.put('http://hew.abct.io/api/restaurants', restaurant, { method: 'PUT' }).then(() => {
+        Vue.http.put(URL, restaurant).then((response) => {
+          console.log(response.body);
           context.commit('fetchRestaurants');
         });
       } else {
-        Vue.http.post('http://hew.abct.io/api/restaurants', restaurant).then(() => {
+        Vue.http.post(URL, restaurant).then(() => {
           context.commit('fetchRestaurants');
         });
       }

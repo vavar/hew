@@ -23,15 +23,15 @@
     </md-dialog>
     <md-whiteframe md-elevation="2">
       <md-toolbar>
-        <h1 class="md-title">Restaurant List</h1>
+        <h1 class="md-title">Restaurants</h1>
         <md-button class="md-icon-button" id="custom" @click="openModal('restaurantModal')">
           <md-icon>add</md-icon>
         </md-button>
       </md-toolbar>
       <md-list>
-        <md-list-item v-for="(row, rowIndex) in restaurants">
+        <md-list-item v-for="(row, rowIndex) in restaurants" class="restaurant-item">
           <div class="image-placeholder">
-            <div class="lorem-image"></div>
+            <div class="lorem-image" v-bind:style="'background-image: url(\'http://lorempixel.com/128/128/food?'+rowIndex+'\')'"></div>
           </div>
           <div class="md-list-text-container">
             <span>{{row.name}}</span>
@@ -70,6 +70,9 @@
     methods: {
       openModal(ref) {
         this.dialog.header = 'Create new restaurant';
+        this.restaurant.id = undefined;
+        this.restaurant.name = '';
+        this.restaurant.phone = '';
         this.dialog.action = 'Add';
         this.$refs[ref].open();
       },
@@ -108,10 +111,12 @@
       text-align: left;
       margin-top: 36px;
     }
-
+    .restaurant-item {
+      padding:10px;
+    }
     .image-placeholder {
-        width: 128px;
-        height: 128px;
+        width: 130px;
+        height: 130px;
         background: #ddd;
         border: 1px solid grey;
         margin-right:20px;
@@ -121,6 +126,5 @@
       height: 128px;
       background-repeat: no-repeat;
       background-size: contain;
-      background-image: url('http://lorempixel.com/128/128/food')
     }
 </style>
