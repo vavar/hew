@@ -16,6 +16,15 @@ var organizationService *OrganizationService
 var restaurantService *RestaurantService
 var userService *UserService
 
+func errorJSON(c *gin.Context, statusCode int, err error) {
+	c.Error(err)
+	c.JSON(statusCode, gin.H{
+		"statusCode": statusCode,
+		"error":      err.Error(),
+	})
+	c.Abort()
+}
+
 func main() {
 	env := os.Getenv("ENVIRONMENT")
 	viper.SetConfigName(env)

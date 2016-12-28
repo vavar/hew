@@ -21,19 +21,16 @@ func NewActivityService(db *Database) *ActivityService {
 func (service *ActivityService) ListActivities(c *gin.Context) {
 	organizationID, err := strconv.Atoi(c.Param("organizationID"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var activities []Activity
 	if err := service.DB.ListActivities(&activities, organizationID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, activities)
 }
 
@@ -41,24 +38,18 @@ func (service *ActivityService) ListActivities(c *gin.Context) {
 func (service *ActivityService) CreateActivity(c *gin.Context) {
 	var json Activity
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Create(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var activity Activity
 	if err := service.DB.FindActivityByID(&activity, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -69,24 +60,18 @@ func (service *ActivityService) CreateActivity(c *gin.Context) {
 func (service *ActivityService) UpdateActivity(c *gin.Context) {
 	var json Activity
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Update(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var activity Activity
 	if err := service.DB.FindActivityByID(&activity, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -97,19 +82,16 @@ func (service *ActivityService) UpdateActivity(c *gin.Context) {
 func (service *ActivityService) ListOrderItems(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("userID"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var orderItems []OrderItem
 	if err := service.DB.ListOrderItems(&orderItems, userID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, orderItems)
 }
 
@@ -117,24 +99,18 @@ func (service *ActivityService) ListOrderItems(c *gin.Context) {
 func (service *ActivityService) CreateOrderItem(c *gin.Context) {
 	var json OrderItem
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Create(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var orderItem OrderItem
 	if err := service.DB.FindOrderItemByID(&orderItem, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -145,24 +121,18 @@ func (service *ActivityService) CreateOrderItem(c *gin.Context) {
 func (service *ActivityService) UpdateOrderItem(c *gin.Context) {
 	var json OrderItem
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Update(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var orderItem OrderItem
 	if err := service.DB.FindOrderItemByID(&orderItem, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 

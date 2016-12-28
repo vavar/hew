@@ -21,17 +21,13 @@ func NewUserService(db *Database) *UserService {
 func (service *UserService) GetByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var user User
 	if err = service.DB.FindUserByID(&user, id); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -42,24 +38,18 @@ func (service *UserService) GetByID(c *gin.Context) {
 func (service *UserService) AddUser(c *gin.Context) {
 	var json User
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Create(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var user User
 	if err := service.DB.FindUserByID(&user, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -70,9 +60,7 @@ func (service *UserService) AddUser(c *gin.Context) {
 func (service *UserService) ListUsers(c *gin.Context) {
 	var users []User
 	if err := service.DB.ListUsers(&users); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusOK, users)
@@ -82,24 +70,18 @@ func (service *UserService) ListUsers(c *gin.Context) {
 func (service *UserService) UpdateUser(c *gin.Context) {
 	var json User
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Update(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var user User
 	if err := service.DB.FindUserByID(&user, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 

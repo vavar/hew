@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"log"
-
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
@@ -24,52 +22,58 @@ func (service *RestaurantService) ListRestaurants(c *gin.Context) {
 	var restaurants []Restaurant
 	err := service.DB.ListRestaurants(&restaurants)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, restaurants)
 }
 
 //CreateRestaurant - add new Restaurant
 func (service *RestaurantService) CreateRestaurant(c *gin.Context) {
 	var restJSON Restaurant
-	if bindErr := c.BindJSON(&restJSON); bindErr != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": bindErr})
+	if err := c.BindJSON(&restJSON); err != nil {
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
+
 	if err := service.DB.CreateRestaurant(&restJSON); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, restJSON)
 }
 
 //UpdateRestaurant - update exists Restaurant
 func (service *RestaurantService) UpdateRestaurant(c *gin.Context) {
 	var restJSON Restaurant
-	if bindErr := c.BindJSON(&restJSON); bindErr != nil || restJSON.ID <= 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": bindErr})
+	if err := c.BindJSON(&restJSON); err != nil || restJSON.ID <= 0 {
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
+
 	if err := service.DB.UpdateRestaurant(&restJSON); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, restJSON)
 }
 
 //CreateMenu - add new Menu
 func (service *RestaurantService) CreateMenu(c *gin.Context) {
 	var menuJSON Menu
-	if bindErr := c.BindJSON(&menuJSON); bindErr != nil {
-		log.Printf("bind JSON failed : %s ", bindErr)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": bindErr})
+	if err := c.BindJSON(&menuJSON); err != nil {
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
+
 	if err := service.DB.Create(&menuJSON); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, menuJSON)
 }
 
@@ -81,21 +85,20 @@ func (service *RestaurantService) UpdateMenu(c *gin.Context) {
 			c.JSON(http.StatusOK, json)
 		}
 	}
-
 }
 
 //GetByID - get Restaurant by ID
 func (service *RestaurantService) GetByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var restaurant Restaurant
 	err = service.DB.FindRestaurantByID(&restaurant, id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusOK, restaurant)
