@@ -1,9 +1,26 @@
 <template>
   <div class="page content">
+    <md-dialog md-open-from="#fab" md-close-to="#fab" ref="restaurantModal">
+      <md-dialog-title>Create new restaurant</md-dialog-title>
+
+      <md-dialog-content>
+        <form>
+          <md-input-container>
+            <label>Name</label>
+            <md-textarea></md-textarea>
+          </md-input-container>
+        </form>
+      </md-dialog-content>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="addRestaurant('restaurantModal')">Add</md-button>
+        <md-button class="md-primary" @click="closeModal('restaurantModal')">Cancel</md-button>
+      </md-dialog-actions>
+    </md-dialog>
     <md-table-card>
       <md-toolbar>
         <h1 class="md-title">Restaurant List</h1>
-        <md-button class="md-icon-button">
+        <md-button class="md-icon-button" id="custom" @click="openModal('restaurantModal')">
           <md-icon>add</md-icon>
         </md-button>
       </md-toolbar> 
@@ -45,7 +62,7 @@
 
 <script>
 export default {
-  name: 'add-restaurant',
+  name: 'restaurant',
   data: () => ({
     restaurant: [
       {
@@ -55,10 +72,19 @@ export default {
     ],
   }),
   methods: {
+    openModal(ref) {
+      this.$refs[ref].open();
+    },
+    closeModal(ref) {
+      this.$refs[ref].close();
+    },
     addMenu() {
 
     },
     onSort() {
+
+    },
+    onPagination() {
 
     },
   },
