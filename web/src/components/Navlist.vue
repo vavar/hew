@@ -10,7 +10,7 @@
       </md-list-item>
 
       <md-list-item>
-        <md-icon>restaurant</md-icon> <router-link to="/add_restaurant"><span>New Restaurant</span></router-link>
+        <md-icon>restaurant</md-icon> <router-link to="/restaurant"><span>Restaurant</span></router-link>
       </md-list-item>
   </div>
 </template>
