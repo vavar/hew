@@ -1,8 +1,9 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <navbar></navbar>
-    <img src="./assets/logo.png">
-    <router-view class="view"></router-view>
+    <transition name="md-router" appear>
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
