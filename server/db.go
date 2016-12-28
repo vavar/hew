@@ -175,3 +175,44 @@ func (database *Database) DeleteMenu(menu *Menu) error {
 	}
 	return nil
 }
+
+//ListActivities - List all activities made by an organization
+func (database *Database) ListActivities(activities *[]Activity, organizationID int) error {
+	err := database.DB.Preload("OrderItems").
+		Where(&Activity{OrganizationID: organizationID}).
+		Find(activities).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to select all activites: %s", err)
+	}
+
+	return nil
+}
+
+//FindActivityByID - Get an activity with the given ID
+func (database *Database) FindActivityByID(activity *Activity, id int) error {
+	err := database.DB.Preload("OrderItems").
+		First(activity).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to get an activity with ID = %d: %s", id, err)
+	}
+
+	return nil
+}
+
+//ListOrderItems - List all order items made by a user
+func (database *Database) ListOrderItems(items *[]OrderItem, userID int) error {
+	if err := database.DB.Where(&OrderItem{UserID: userID}).Find(items).Error; err != nil {
+		return fmt.Errorf("Failed to select all order items ")
+	}
+	return nil
+}
+
+//FindOrderItemByID - Get an order item with the given ID
+func (database *Database) FindOrderItemByID(item *OrderItem, id int) error {
+	if err := database.DB.First(item, id).Error; err != nil {
+		return fmt.Errorf("Failed to get an order item with ID = %d: %s", id, err)
+	}
+	return nil
+}

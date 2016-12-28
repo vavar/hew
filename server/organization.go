@@ -21,11 +21,10 @@ func NewOrganizationService(db *Database) *OrganizationService {
 func (service *OrganizationService) ListOrganizations(c *gin.Context) {
 	var organizations []Organization
 	if err := service.DB.ListOrganizations(&organizations); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, organizations)
 }
 
@@ -33,17 +32,13 @@ func (service *OrganizationService) ListOrganizations(c *gin.Context) {
 func (service *OrganizationService) GetByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var organization Organization
 	if err = service.DB.FindOrganizationByID(&organization, id); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -54,24 +49,18 @@ func (service *OrganizationService) GetByID(c *gin.Context) {
 func (service *OrganizationService) CreateOrganization(c *gin.Context) {
 	var json Organization
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Create(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var organization Organization
 	if err := service.DB.FindOrganizationByID(&organization, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -82,24 +71,18 @@ func (service *OrganizationService) CreateOrganization(c *gin.Context) {
 func (service *OrganizationService) UpdateOrganization(c *gin.Context) {
 	var json Organization
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := service.DB.Update(&json); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	var organization Organization
 	if err := service.DB.FindOrganizationByID(&organization, json.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 

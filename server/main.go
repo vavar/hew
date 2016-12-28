@@ -16,6 +16,15 @@ var organizationService *OrganizationService
 var restaurantService *RestaurantService
 var userService *UserService
 
+func errorJSON(c *gin.Context, statusCode int, err error) {
+	c.Error(err)
+	c.JSON(statusCode, gin.H{
+		"statusCode": statusCode,
+		"error":      err.Error(),
+	})
+	c.Abort()
+}
+
 func main() {
 	env := os.Getenv("ENVIRONMENT")
 	viper.SetConfigName(env)
@@ -54,11 +63,11 @@ func main() {
 	api.POST("/menus", restaurantService.CreateMenu)
 	api.PUT("/menus", restaurantService.UpdateMenu)
 
-	api.GET("/activities", activityService.ListActivities)
+	api.GET("/activities/:organizationID", activityService.ListActivities)
 	api.POST("/activities", activityService.CreateActivity)
 	api.PUT("/activities", activityService.UpdateActivity)
 
-	api.GET("/orders", activityService.ListOrderItem)
+	api.GET("/orders/:userID", activityService.ListOrderItems)
 	api.POST("/orders", activityService.CreateOrderItem)
 	api.PUT("/orders", activityService.UpdateOrderItem)
 
