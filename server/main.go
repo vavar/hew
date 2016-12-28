@@ -8,6 +8,16 @@ import (
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
+//CORSMiddleware CORS bypass
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Content-Type", "application/json")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		c.Next()
+	}
+}
+
 func errorJSON(c *gin.Context, statusCode int, err error) {
 	c.Error(err)
 	c.JSON(statusCode, gin.H{
@@ -30,6 +40,8 @@ func main() {
 	var db = InitDBConnection()
 
 	router := gin.Default()
+	router.Use(CORSMiddleware())
+
 	api := router.Group("/api")
 
 	var userService = NewUserService(db)
