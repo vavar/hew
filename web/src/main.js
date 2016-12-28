@@ -9,6 +9,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Order from './components/Order';
 import Restaurant from './components/Restaurant';
+import ManageEvents from './components/ManageEvents';
 
 Vue.use(VueMaterial);
 Vue.material.registerTheme('default', {
@@ -25,6 +26,8 @@ function requireAuth(to, from, next) {
       path: '/login',
       query: { redirect: to.fullPath },
     });
+  } else if (to.fullPath.startsWith('/admin') && !auth.isAdmin()) {
+    next('/');
   } else {
     next();
   }
@@ -39,6 +42,7 @@ const router = new VueRouter({
     { path: '/login', component: Login },
     { path: '/order', component: Order, beforeEnter: requireAuth },
     { path: '/restaurant', component: Restaurant, beforeEnter: requireAuth },
+    { path: '/admin/events', component: ManageEvents, beforeEnter: requireAuth },
     { path: '/logout',
       beforeEnter(to, from, next) {
         auth.logout();
