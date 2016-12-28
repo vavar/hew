@@ -6,5 +6,5 @@ gin-bin
 # GOLang Ignored
 ###########
 pkg/
-src/
+./src/
 bin/
