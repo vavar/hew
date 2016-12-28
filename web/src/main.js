@@ -13,6 +13,7 @@ import Login from './components/Login';
 import Order from './components/Order';
 import Restaurant from './components/Restaurant';
 import ManageEvents from './components/ManageEvents';
+import RestaurantMenu from './components/RestaurantMenu';
 
 Vue.use(VueMaterial);
 Vue.use(VueResource);
@@ -48,6 +49,7 @@ const router = new VueRouter({
     { path: '/order', component: Order, beforeEnter: requireAuth },
     { path: '/restaurant', component: Restaurant, beforeEnter: requireAuth },
     { path: '/admin/events', component: ManageEvents, beforeEnter: requireAuth },
+    { path: '/restaurant/:id', component: RestaurantMenu, beforeEnter: requireAuth },
     { path: '/logout',
       beforeEnter(to, from, next) {
         auth.logout();
