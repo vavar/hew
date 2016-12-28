@@ -7,6 +7,10 @@
 <script>
 export default {
   name: 'order',
-  data() {},
+  data() {
+    return {
+      msg: 'asdf',
+    };
+  },
 };
 </script>
