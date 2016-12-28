@@ -54,11 +54,11 @@ func main() {
 	api.POST("/menus", restaurantService.CreateMenu)
 	api.PUT("/menus", restaurantService.UpdateMenu)
 
-	api.GET("/activities", activityService.ListActivities)
+	api.GET("/activities/:organizationID", activityService.ListActivities)
 	api.POST("/activities", activityService.CreateActivity)
 	api.PUT("/activities", activityService.UpdateActivity)
 
-	api.GET("/orders", activityService.ListOrderItem)
+	api.GET("/orders/:userID", activityService.ListOrderItems)
 	api.POST("/orders", activityService.CreateOrderItem)
 	api.PUT("/orders", activityService.UpdateOrderItem)
 
