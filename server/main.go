@@ -16,6 +16,16 @@ var organizationService *OrganizationService
 var restaurantService *RestaurantService
 var userService *UserService
 
+//CORSMiddleware CORS bypass
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Content-Type", "application/json")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		c.Next()
+	}
+}
+
 func errorJSON(c *gin.Context, statusCode int, err error) {
 	c.Error(err)
 	c.JSON(statusCode, gin.H{
@@ -43,6 +53,8 @@ func main() {
 	userService = NewUserService(database)
 
 	router := gin.Default()
+	router.Use(CORSMiddleware())
+
 	api := router.Group("/api")
 
 	api.GET("/users", userService.ListUsers)
