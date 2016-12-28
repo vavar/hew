@@ -36,7 +36,7 @@ func InitDBConnection() *Database {
 //Create - Create an Object
 func (database *Database) Create(object interface{}) error {
 	if err := database.DB.Create(object).Error; err != nil {
-		return fmt.Errorf("Failed to create a '%s' : %s", reflect.TypeOf(object), err)
+		return fmt.Errorf("Failed to create a '%s': %s", reflect.TypeOf(object), err)
 	}
 	return nil
 }
@@ -44,7 +44,7 @@ func (database *Database) Create(object interface{}) error {
 //Update - Update an organization
 func (database *Database) Update(object interface{}) error {
 	if err := database.DB.Model(object).Updates(object).Error; err != nil {
-		return fmt.Errorf("Failed to update '%s' : %s", reflect.TypeOf(object), err)
+		return fmt.Errorf("Failed to update '%s': %s", reflect.TypeOf(object), err)
 	}
 	return nil
 }
@@ -78,7 +78,7 @@ func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
 //CreateRestaurant - create Restaurant
 func (database *Database) CreateRestaurant(restaurant *Restaurant) error {
 	if err := database.DB.Create(restaurant).Error; err != nil {
-		log.Printf("Failed to create Restaurant : %s", err)
+		log.Printf("Failed to create Restaurant: %s", err)
 		return fmt.Errorf("Failed to create Restaurant")
 	}
 	return nil
@@ -89,14 +89,14 @@ func (database *Database) UpdateRestaurant(restaurant *Restaurant) error {
 	tx := database.DB.Begin()
 	var restaurantDAO Restaurant
 	if err := database.DB.First(&restaurantDAO, restaurant.ID).Error; err != nil {
-		log.Printf("Record does not exists : %s", err)
+		log.Printf("Record does not exists: %s", err)
 		tx.Rollback()
 		return fmt.Errorf("Record does not exists")
 	}
 
 	restaurantDAO.Name = restaurant.Name
 	if err := database.DB.Save(restaurantDAO).Error; err != nil {
-		log.Printf("Failed to Save Data : %s", err)
+		log.Printf("Failed to Save Data: %s", err)
 		tx.Rollback()
 		return fmt.Errorf("Failed to Update Restaurant Data")
 	}
