@@ -11,6 +11,12 @@ import Order from './components/Order';
 import AddRestaurant from './components/AddRestaurant';
 
 Vue.use(VueMaterial);
+Vue.material.registerTheme('default', {
+  primary: 'blue',
+  accent: 'orange',
+  warn: 'red',
+  background: 'white',
+});
 Vue.use(VueRouter);
 
 function requireAuth(to, from, next) {
@@ -26,6 +32,7 @@ function requireAuth(to, from, next) {
 
 const router = new VueRouter({
   mode: 'history',
+  linkActiveClass: 'active',
   base: __dirname,
   routes: [
     { path: '/', component: Home },
