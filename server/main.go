@@ -5,18 +5,9 @@ import (
 	"os"
 
 	"github.com/spf13/viper"
+	cors "gopkg.in/gin-contrib/cors.v1"
 	"gopkg.in/gin-gonic/gin.v1"
 )
-
-//CORSMiddleware CORS bypass
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Content-Type", "application/json")
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-		c.Next()
-	}
-}
 
 func errorJSON(c *gin.Context, statusCode int, err error) {
 	c.Error(err)
@@ -40,7 +31,7 @@ func main() {
 	var db = InitDBConnection()
 
 	router := gin.Default()
-	router.Use(CORSMiddleware())
+	router.Use(cors.Default())
 
 	api := router.Group("/api")
 
