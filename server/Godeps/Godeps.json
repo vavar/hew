@@ -2,6 +2,9 @@
 	"ImportPath": "github.com/vavar/hew/server",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/fsnotify/fsnotify",
@@ -152,6 +155,11 @@
 		{
 			"ImportPath": "golang.org/x/text/unicode/norm",
 			"Rev": "a49bea13b776691cb1b49873e5d8df96ec74831a"
+		},
+		{
+			"ImportPath": "gopkg.in/gin-contrib/cors.v1",
+			"Comment": "v1.1",
+			"Rev": "fb918bcd825b9e20f0c3c365981baf9454029b6c"
 		},
 		{
 			"ImportPath": "gopkg.in/gin-gonic/gin.v1",
