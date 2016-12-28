@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"log"
+
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
@@ -60,6 +62,7 @@ func (service *RestaurantService) UpdateRestaurant(c *gin.Context) {
 func (service *RestaurantService) CreateMenu(c *gin.Context) {
 	var menuJSON Menu
 	if bindErr := c.BindJSON(menuJSON); bindErr != nil {
+		log.Printf("bind JSON failed : %s ", bindErr)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": bindErr})
 		return
 	}
