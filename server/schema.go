@@ -25,6 +25,7 @@ type Organization struct {
 type Restaurant struct {
 	ID         int        `json:"id"         gorm:"primary_key;AUTO_INCREMENT"`
 	Name       string     `json:"name"       gorm:"type:varchar(500)"`
+	Phone      string     `json:"phone"      gorm:"type:varchar(50)"`
 	Menus      []Menu     `json:"menus"`
 	Activities []Activity `json:"activities" gorm:"many2many:restaurants_activities"`
 }
