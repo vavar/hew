@@ -1,5 +1,16 @@
 <template>
-  <div class="navbar-viewport">
+  <div class="phone-viewport">
+    <md-toolbar>
+      <md-button class="md-icon-button" @click="toggleLeftSidenav">
+        <md-icon>menu</md-icon>
+      </md-button>
+      <h2 class="md-title">Hew App</h2>
+      <div class="text-right">
+        <router-link tag="md-button" v-if="loggedIn" to="/logout" class="md-raised md-accent">Sign out</router-link>
+        <router-link tag="md-button" v-if="!loggedIn" to="/login" class="md-raised md-warn">Sign in</router-link>
+      </div>
+    </md-toolbar>
+    
     <md-sidenav class="md-left" ref="leftSidenav" @open="open('Left')" @close="close('Left')">
       <md-toolbar>
         <div class="md-toolbar-container">
@@ -8,18 +19,6 @@
       </md-toolbar>
       <navlist></navlist>
     </md-sidenav>
-    <md-whiteframe md-elevation="3">
-      <md-toolbar>
-        <md-button class="md-icon-button" @click="toggleLeftSidenav">
-          <md-icon>menu</md-icon>
-        </md-button>
-        <h2 class="md-title">Hew</h2>
-        <div class="text-right">
-          <router-link tag="md-button" v-if="loggedIn" to="/logout" class="md-raised md-accent">Sign out</router-link>
-          <router-link tag="md-button" v-if="!loggedIn" to="/login" class="md-raised md-warn">Sign in</router-link>
-        </div>
-      </md-toolbar>
-    </md-whiteframe>
   </div>
 </template>
 

@@ -8,14 +8,6 @@ import (
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
-//DB is an instance of Database type
-var database *Database
-
-var activityService *ActivityService
-var organizationService *OrganizationService
-var restaurantService *RestaurantService
-var userService *UserService
-
 //CORSMiddleware CORS bypass
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -40,33 +32,31 @@ func main() {
 	viper.SetConfigName(env)
 	viper.AddConfigPath("config")
 
-	Err := viper.ReadInConfig()
-	if Err != nil {
-		panic(fmt.Errorf("Failed to read the config file: %s", Err))
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(fmt.Errorf("Failed to read the config file: %s", err))
 	}
 
-	database = InitDBConnection()
-	defer database.DB.Close()
-	activityService = NewActivityService(database)
-	organizationService = NewOrganizationService(database)
-	restaurantService = NewRestaurantService(database)
-	userService = NewUserService(database)
+	var db = InitDBConnection()
 
 	router := gin.Default()
 	router.Use(CORSMiddleware())
 
 	api := router.Group("/api")
 
+	var userService = NewUserService(db)
 	api.GET("/users", userService.ListUsers)
 	api.POST("/users", userService.AddUser)
 	api.GET("/users/:id", userService.GetByID)
 	api.PUT("/users", userService.UpdateUser)
 
+	var organizationService = NewOrganizationService(db)
 	api.GET("/organizations", organizationService.ListOrganizations)
 	api.GET("/organizations/:id", organizationService.GetByID)
 	api.POST("/organizations", organizationService.CreateOrganization)
 	api.PUT("/organizations", organizationService.UpdateOrganization)
 
+	var restaurantService = NewRestaurantService(db)
 	api.GET("/restaurants", restaurantService.ListRestaurants)
 	api.POST("/restaurants", restaurantService.CreateRestaurant)
 	api.PUT("/restaurants", restaurantService.UpdateRestaurant)
@@ -75,6 +65,7 @@ func main() {
 	api.POST("/menus", restaurantService.CreateMenu)
 	api.PUT("/menus", restaurantService.UpdateMenu)
 
+	var activityService = NewActivityService(db)
 	api.GET("/activities/:organizationID", activityService.ListActivities)
 	api.POST("/activities", activityService.CreateActivity)
 	api.PUT("/activities", activityService.UpdateActivity)
