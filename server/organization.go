@@ -17,6 +17,18 @@ func NewOrganizationService(db *Database) *OrganizationService {
 	return &OrganizationService{db}
 }
 
+//ListOrganizations - List all organizations
+func (service *OrganizationService) ListOrganizations(c *gin.Context) {
+	var organizations []Organization
+	if err := service.DB.ListOrganizations(&organizations); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, organizations)
+}
+
 //GetByID - Get an organization with the given ID
 func (service *OrganizationService) GetByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -55,9 +67,15 @@ func (service *OrganizationService) CreateOrganization(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Created the organization successfully",
-	})
+	var organization Organization
+	if err := service.DB.FindOrganizationByID(&organization, json.ID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, organization)
 }
 
 //UpdateOrganization - Update an organization
@@ -77,7 +95,13 @@ func (service *OrganizationService) UpdateOrganization(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Updated the organization successfully",
-	})
+	var organization Organization
+	if err := service.DB.FindOrganizationByID(&organization, json.ID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, organization)
 }

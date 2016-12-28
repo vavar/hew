@@ -49,6 +49,43 @@ func (database *Database) Update(object interface{}) error {
 	return nil
 }
 
+//ListUsers - List all users
+func (database *Database) ListUsers(users *[]User) error {
+	err := database.DB.Preload("OrderItems").
+		Find(users).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to select all users: %s", err)
+	}
+
+	return nil
+}
+
+//FindUserByID - Get a user with the given ID
+func (database *Database) FindUserByID(user *User, id int) error {
+	err := database.DB.Preload("OrderItems").
+		First(user, id).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to get a user with ID = %d: %s", id, err)
+	}
+
+	return nil
+}
+
+//ListOrganizations - List all organizations
+func (database *Database) ListOrganizations(organizations *[]Organization) error {
+	err := database.DB.Preload("Users").
+		Preload("Activities").
+		Find(organizations).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to select all organizations: %s", err)
+	}
+
+	return nil
+}
+
 //FindOrganizationByID retrieves the organization from the database
 func (database *Database) FindOrganizationByID(organization *Organization, id int) error {
 	err := database.DB.Preload("Users").
