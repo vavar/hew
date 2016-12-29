@@ -15,7 +15,7 @@
               <md-layout md-gutter>
                 <md-layout md-row md-gutter>
                   <md-layout md-flex="90" md-flex-offset="5">
-                    <order :restaurant-name="res.name"></order>
+                    <order :restaurantName="res.name"></order>
                   </md-layout>
                   <md-layout>
                   </md-layout>
@@ -34,7 +34,6 @@
 
   export default {
     name: 'home',
-    props: ['restaurant-name'],
     data() {
       return {
         activities: [

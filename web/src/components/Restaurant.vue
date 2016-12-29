@@ -91,7 +91,6 @@
         this.$store.dispatch('updateRestaurant', this.restaurant);
       },
       info(rowIndex) {
-        console.log('row index', rowIndex);
         const path = `/restaurant/${rowIndex}`;
         this.$router.push({ path });
       },

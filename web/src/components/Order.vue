@@ -1,7 +1,7 @@
 <template>
   <div class="full-width">
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="menuModal">
-      <md-dialog-title>Add {{ name }}KhunWee menu</md-dialog-title>
+      <md-dialog-title>Add {{ restaurantName }}KhunWee menu</md-dialog-title>
       <md-dialog-content>
         <form>
           <md-input-container>
