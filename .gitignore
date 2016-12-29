@@ -8,3 +8,9 @@ gin-bin
 /pkg/
 /src/
 /bin/
+
+###########
+# For python ML microservice
+###########
+*.pyc
+ml/ratings.db
