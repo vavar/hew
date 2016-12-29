@@ -14,7 +14,8 @@ type ActivityService struct {
 
 //ListActivitiesParams - Query parameters passed to endpoint GET /api/activities/:organizationID
 type ListActivitiesParams struct {
-	Status string `form:"status"`
+	Status       string `form:"status"`
+	Organization int    `form:"org"`
 }
 
 //NewActivityService - Instantiate Activity Service
@@ -24,11 +25,6 @@ func NewActivityService(db *Database) *ActivityService {
 
 //ListActivities - list related activity
 func (service *ActivityService) ListActivities(c *gin.Context) {
-	organizationID, err := strconv.Atoi(c.Param("organizationID"))
-	if err != nil {
-		errorJSON(c, http.StatusInternalServerError, err)
-		return
-	}
 
 	var params ListActivitiesParams
 	if err := c.Bind(&params); err != nil {
@@ -36,7 +32,7 @@ func (service *ActivityService) ListActivities(c *gin.Context) {
 	}
 
 	var activities []Activity
-	if err := service.DB.ListActivities(&activities, organizationID, params.Status); err != nil {
+	if err := service.DB.ListActivities(&activities, params.Organization, params.Status); err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
