@@ -18,6 +18,12 @@ type ListActivitiesParams struct {
 	Organization int    `form:"org"`
 }
 
+//AddRestaurantParams - Query parameters passed to endpoint POST /api/activities/restaurant/add
+type AddRestaurantParams struct {
+	ActivityID   int `json:"activity_id"`
+	RestaurantID int `json:"restaurant_id"`
+}
+
 //NewActivityService - Instantiate Activity Service
 func NewActivityService(db *Database) *ActivityService {
 	return &ActivityService{db}
@@ -81,6 +87,24 @@ func (service *ActivityService) UpdateActivity(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusOK, activity)
+}
+
+//AddRestaurant - add Restaurant association
+func (service *ActivityService) AddRestaurant(c *gin.Context) {
+	var params AddRestaurantParams
+	if err := c.BindJSON(&params); err != nil {
+		errorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+	var activity Activity
+	if findErr := service.DB.FindActivityByID(&activity, params.ActivityID); findErr != nil {
+		errorJSON(c, http.StatusInternalServerError, findErr)
+		return
+	}
+	if linkErr := service.DB.AddActivityRestaurant(&activity, params.RestaurantID); linkErr != nil {
+
+	}
 	c.JSON(http.StatusOK, activity)
 }
 

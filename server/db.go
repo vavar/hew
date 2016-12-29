@@ -189,6 +189,7 @@ func (database *Database) ListActivities(activities *[]Activity, organizationID 
 
 	err := filteredActivities.Preload("OrderItems").
 		Preload("Restaurants").
+		Preload("Restaurants.Menus").
 		Where(&Activity{OrganizationID: organizationID}).
 		Find(activities).Error
 
@@ -209,6 +210,18 @@ func (database *Database) FindActivityByID(activity *Activity, id int) error {
 		return fmt.Errorf("Failed to get an activity with ID = %d: %s", id, err)
 	}
 
+	return nil
+}
+
+//AddActivityRestaurant - add Activity Restaurant
+func (database *Database) AddActivityRestaurant(activity *Activity, id int) error {
+	var restaurant Restaurant
+	if notFound := database.FindRestaurantByID(&restaurant, id); notFound != nil {
+		return notFound
+	}
+	if err := database.DB.Model(activity).Association("Restaurants").Append(restaurant).Error; err != nil {
+		return fmt.Errorf("Failed to relation an activity with restaurant ID = %d: %s", id, err)
+	}
 	return nil
 }
 

@@ -60,6 +60,7 @@ func main() {
 	api.GET("/activities", activityService.ListActivities)
 	api.POST("/activities", activityService.CreateActivity)
 	api.PUT("/activities", activityService.UpdateActivity)
+	api.POST("/activities/restaurants", activityService.AddRestaurant)
 
 	api.GET("/orders/:userID", activityService.ListOrderItems)
 	api.POST("/orders", activityService.CreateOrderItem)
