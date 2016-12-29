@@ -3,6 +3,7 @@ from typing import Mapping
 
 from flask import Flask, request, jsonify
 from sqlalchemy import create_engine, Column, Integer
+from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -89,6 +90,26 @@ def add_rating():
     session.add(rating)
     session.commit()
     return jsonify(rating.serialize())
+
+
+@app.route('/api/ratings/', methods=['GET'])
+def get_rating():
+    """
+    Get the average ratings for a given menu_id
+    :query_param menu: the id of the meal in question
+    """
+    menu_id = request.args.get('menu')
+    if menu_id is None:
+        raise ValueError('A menu id must be provided in the query string e.g. /api/ratings/?menu=21')
+    session = Session()
+    avg_ratings = session.query(
+        func.avg(Rating.portion_size).label('portion_size'),
+        func.avg(Rating.healthiness).label('healthiness'),
+        func.avg(Rating.sweetness).label('sweetness'),
+        func.avg(Rating.spice_level).label('spice_level'),
+        func.avg(Rating.rating).label('rating'),
+    ).filter(Rating.menu_id == menu_id).first()
+    return jsonify({key: getattr(avg_ratings, key) for key in avg_ratings._fields})
 
 
 # http://flask.pocoo.org/docs/0.12/server/#in-code
