@@ -1,5 +1,5 @@
 <template>
-  <div class="page content">
+  <div class="page content" v-if="!isLoading">
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="activityModal">
       <md-dialog-title>{{dialog.header}}</md-dialog-title>
 
@@ -7,13 +7,18 @@
         <form>
           <md-input-container>
             <label>Name</label>
-            <md-input required v-model="activity.name" placeholder="Restaurant Name"></md-input>
+            <md-input required v-model="activity.name" placeholder="Event Name"></md-input>
+          </md-input-container>
+          <md-input-container>
+            <label>Closed At</label>
+            <md-input required type="date" v-model="date"></md-input>
+            <md-input required type="time" v-model="time"></md-input>
           </md-input-container>
         </form>
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary">{{dialog.action}}</md-button>
+        <md-button class="md-primary" @click="addActivity('activityModal')">{{dialog.action}}</md-button>
         <md-button class="md-primary" @click="closeModal('activityModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -37,9 +42,8 @@
 
         <md-table-body>
           <md-table-row v-for="(row, rowIndex) in activities" :key="rowIndex" :md-item="row" md-auto-select>
-            <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex">
-              {{ column }}
-            </md-table-cell>
+            <md-table-cell>{{row.name}}</md-table-cell>
+            <md-table-cell>{{formatDate(row.closed_at)}}</md-table-cell>
             <md-table-cell>
               <md-button class="md-icon-button">
                 <md-icon>edit</md-icon>
@@ -53,21 +57,49 @@
 </template>
 
 <script>
+import utils from '../utils';
+
 export default {
   name: 'manage-events',
   data: () => ({
     dialog: { header: '', action: '' },
-    activity: { name: '', closed_at: '' },
+    date: '',
+    time: '',
+    activity: { id: '', name: '', closed_at: '', organization_id: 1 },
   }),
+  computed: {
+    isLoading() {
+      return this.$store.getters.isLoading;
+    },
+    activities() {
+      return this.$store.state.openActivities.concat(this.$store.state.closedActivities);
+    },
+  },
+  created() {
+    this.$store.dispatch('getActivities', this.activity.organization_id);
+  },
   methods: {
     openModal(ref) {
+      const localTime = utils.getLocalTime().replace('Z', '').split('T');
       this.dialog.header = 'Create a new event';
       this.dialog.action = 'Add';
+      this.activity.id = undefined;
+      this.activity.name = '';
+      this.date = localTime[0];
+      this.time = localTime[1];
       this.$refs[ref].open();
     },
     closeModal(ref) {
       this.$refs[ref].close();
     },
+    addActivity(ref) {
+      this.activity.closed_at = utils.formatDateForAPI(`${this.date} ${this.time}`);
+      this.$refs[ref].close();
+      this.$store.dispatch('updateActivity', this.activity);
+    },
+    formatDate(date) {
+      return utils.formatDate(date);
+    }
   },
 };
 </script>
