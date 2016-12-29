@@ -32,7 +32,7 @@
     </md-dialog>
     <md-table-card>
       <md-toolbar>
-        <h1 class="md-title">Today restaurant: KhunWee {{ name }}</h1>
+        <h1 class="md-title">List</h1>
         <md-button class="md-icon-button" id="custom" @click="openModal('menuModal')">
           <md-icon>add</md-icon>
         </md-button>
@@ -56,7 +56,7 @@
               <md-button class="md-icon-button">
                 <md-icon>delete</md-icon>
               </md-button>
-            </md-table-cell> 
+            </md-table-cell>
           </md-table-row>
         </md-table-body>
       </md-table>
