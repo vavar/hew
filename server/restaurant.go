@@ -79,10 +79,10 @@ func (service *RestaurantService) CreateMenu(c *gin.Context) {
 
 //UpdateMenu - update exists Menu
 func (service *RestaurantService) UpdateMenu(c *gin.Context) {
-	var json *Menu
-	if c.BindJSON(&json) == nil {
-		if service.DB.UpdateMenu(json) == nil {
-			c.JSON(http.StatusOK, json)
+	var menuJSON Menu
+	if c.BindJSON(&menuJSON) == nil {
+		if service.DB.Update(&menuJSON) == nil {
+			c.JSON(http.StatusOK, menuJSON)
 		}
 	}
 }
