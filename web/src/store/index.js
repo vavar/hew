@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+
 /* global console */
 /* eslint no-console: ["error", { allow: ["warn", "error","log"] }] */
 const BASE_URL = 'http://hew.abct.io';
 const RESTAURANTS_URL = `${BASE_URL}/api/restaurants`;
 const ACTIVITIES_URL = `${BASE_URL}/api/activities`;
+const MENU_URL = `${BASE_URL}/api/menus`;
 
 function fetchRestaurants(state, context) {
   Vue.http.get(RESTAURANTS_URL).then((response) => {
@@ -33,9 +35,9 @@ function fetchRestaurantInfo(state, context) {
   const info = `${RESTAURANTS_URL}/${context.id}`;
   Vue.http.get(info).then((response) => {
     const rest = response.body;
-    console.log('fetch me', rest);
     state.restaurantMap[rest.id] = rest;
     state.restaurants.push(rest);
+    state.activeRestaurant = rest;
     context.store.commit('loadingState', { isLoading: false });
   });
 }
@@ -49,6 +51,7 @@ export default new Vuex.Store({
     restaurants: [],
     openActivities: [],
     closedActivities: [],
+    activeRestaurant: {},
   },
   getters: {
     isLoading(state) {
@@ -77,14 +80,10 @@ export default new Vuex.Store({
       }
       const state = context.state;
       const commit = context.commit;
-      if (state.restaurants) {
-        const restaurants = state.restaurants.filter((restaurant) => restaurant.id === id);
-        console.log(`exists !!`);
-        if (restaurants.length > 0) {
-          return restaurants[0];
-        }
+      if (state.restaurantMap[id]) {
+        state.activeRestaurant = state.restaurantMap[id];
+        return;
       }
-      console.log(`fetchRestaurantInfo !! ${id}`);
       commit('loadingState', { isLoading: true });
       commit('fetchRestaurantInfo', {store:context, id});
     },
@@ -92,7 +91,20 @@ export default new Vuex.Store({
       context.commit('loadingState', { isLoading: true });
       context.commit('fetchActivities', { store: context, organizationId });
     },
-    updateRestaurant(context, restaurant) {
+    addOrUpdateMenu(context, menu) {
+      menu.price = +menu.price;
+      if (menu.id) {
+        Vue.http.put(MENU_URL, menu).then((response) => {
+          console.log(response.body , menu.restaurant_id);
+          context.commit('fetchRestaurantInfo',{store:context, id:""+menu.restaurant_id});
+        });
+      } else {
+        Vue.http.post(MENU_URL, menu).then(() => {
+          context.commit('fetchRestaurantInfo',{store:context, id:""+menu.restaurant_id});
+        });
+      }
+    },
+    addOrUpdateRestaurant(context, restaurant) {
       if (restaurant.id) {
         Vue.http.put(RESTAURANTS_URL, restaurant).then((response) => {
           console.log(response.body);

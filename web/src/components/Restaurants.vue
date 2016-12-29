@@ -17,7 +17,7 @@
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="addRestaurant('restaurantModal')">{{dialog.action}}</md-button>
+        <md-button class="md-primary" @click="addOrUpdateRestaurant('restaurantModal')">{{dialog.action}}</md-button>
         <md-button class="md-primary" @click="closeModal('restaurantModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -89,9 +89,9 @@
         this.restaurant.phone = restaurant.phone;
         this.$refs[ref].open();
       },
-      addRestaurant(ref) {
+      addOrUpdateRestaurant(ref) {
         this.$refs[ref].close();
-        this.$store.dispatch('updateRestaurant', this.restaurant);
+        this.$store.dispatch('addOrUpdateRestaurant', this.restaurant);
       },
       info(row) {
         const path = `/restaurant/${row.id}`;

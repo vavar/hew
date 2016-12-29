@@ -1,23 +1,23 @@
 <template>
   <md-layout md-gutter v-if="!isLoading">
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="menuModal">
-      <md-dialog-title>Add new menu</md-dialog-title>
+      <md-dialog-title>{{dialog.header}}</md-dialog-title>
 
       <md-dialog-content>
         <form>
           <md-input-container>
             <label>Menu</label>
-            <md-textarea></md-textarea>
+            <md-input required v-model="menu.name" placeholder="Menu Name"></md-input>
           </md-input-container>
           <md-input-container>
             <label>Price</label>
-            <md-textarea></md-textarea>
+            <md-input v-model="menu.price" placeholder="Price"></md-input>
           </md-input-container>
         </form>
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="addMenu('menuModal')">Add</md-button>
+        <md-button class="md-primary" @click="addOrUpdateMenu('menuModal')">{{dialog.action}}</md-button>
         <md-button class="md-primary" @click="closeModal('menuModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -46,7 +46,7 @@
                   {{ column }}
                 </md-table-cell>
                 <md-table-cell>
-                  <md-button class="md-icon-button">
+                  <md-button class="md-icon-button"  @click="openEditModal('menuModal',row)">
                     <md-icon>create</md-icon>
                   </md-button>
                 </md-table-cell>
@@ -71,17 +71,12 @@
       restaurantID: null,
       post: null,
       error: null,
-      menu: [
-        {
-          name: 'Frozen yogurt',
-          price: '159',
-        },
-      ],
+      dialog: { header: '', action: '' },
+      menu: { id: '', name: '', price: '', restaurant_id: '' },
     }),
     computed: {
       restaurant(){
-        console.log(this.restaurantID,this.$store.state.restaurantMap);
-        return this.$store.state.restaurantMap[this.restaurantID];
+        return this.$store.state.activeRestaurant;
       },
       isLoading() {
         return this.$store.getters.isLoading;
@@ -98,14 +93,35 @@
     },
     methods: {
       fetchData() {
-        console.log( 'fetchData' , this.$route.params.id);
         this.error = this.post = null;
         this.loading = true;
         this.restaurantID = this.$route.params.id;
         this.$store.dispatch('getRestaurant', {id:this.restaurantID});
       },
       openModal(ref) {
+        this.dialog.header = 'Create new Menu';
+        this.dialog.action = 'Add';
+        this.menu.id = undefined;
+        this.menu.name = '';
+        this.menu.price = '';
+        this.menu.restaurant_id = +this.restaurant.id;
         this.$refs[ref].open();
+      },
+      openEditModal(ref, row) {
+        this.dialog.header = 'Update Menu';
+        this.dialog.action = 'Update';
+        const menu = row;
+
+        this.menu.id = menu.id;
+        this.menu.name = menu.name;
+        this.menu.price = menu.price;
+        this.menu.restaurant_id = menu.restaurant_id;
+        this.$refs[ref].open();
+      },
+
+      addOrUpdateMenu(ref) {
+        this.$refs[ref].close();
+        this.$store.dispatch('addOrUpdateMenu', this.menu);
       },
       closeModal(ref) {
         this.$refs[ref].close();
