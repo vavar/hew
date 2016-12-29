@@ -81,7 +81,7 @@ export default new Vuex.Store({
       const state = context.state;
       const commit = context.commit;
       if (state.restaurantMap[id]) {
-        activeRestaurant = state.restaurantMap[id];
+        state.activeRestaurant = state.restaurantMap[id];
         return;
       }
       commit('loadingState', { isLoading: true });
