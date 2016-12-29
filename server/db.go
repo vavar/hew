@@ -187,7 +187,8 @@ func (database *Database) ListActivities(activities *[]Activity, organizationID 
 		filteredActivities = database.DB.Where("closed_at <= ?", now)
 	}
 
-	err := filteredActivities.Preload("OrderItems").
+	err := filteredActivities.Order("closed_at desc").
+		Preload("OrderItems").
 		Preload("Restaurants").
 		Where(&Activity{OrganizationID: organizationID}).
 		Find(activities).Error

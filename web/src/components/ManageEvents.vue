@@ -31,11 +31,11 @@
         </md-button>
       </md-toolbar>
 
-      <md-table md-sort="closed-at" md-sort-type="desc">
+      <md-table>
         <md-table-header>
           <md-table-row>
-            <md-table-head md-sort-by="name">Name</md-table-head>
-            <md-table-head md-sort-by="closed-at">Closed At</md-table-head>
+            <md-table-head>Name</md-table-head>
+            <md-table-head>Closed At</md-table-head>
             <md-table-head>&nbsp;</md-table-head>
           </md-table-row>
         </md-table-header>
