@@ -40,9 +40,9 @@ function requireAuth(to, from, next) {
 }
 
 const router = new VueRouter({
-  mode: 'history',
-  linkActiveClass: 'active',
-  base: __dirname,
+  // mode: 'history',
+  // linkActiveClass: 'active',
+  // base: __dirname,
   routes: [
     { path: '/', component: Home },
     { path: '/login', component: Login },

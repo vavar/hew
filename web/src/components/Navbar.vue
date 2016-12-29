@@ -4,12 +4,11 @@
       <md-button class="md-icon-button" @click="toggleLeftSidenav">
         <md-icon>menu</md-icon>
       </md-button>
-
-      <h2 class="md-title">
-        <md-avatar>
-          <img src="../assets/logo.png" />
-        </md-avatar>
-        <span>Hew</span>
+      <h2 class="md-title" @click="gotoHome()">
+          <md-avatar>
+            <img src="../assets/logo.png" />
+          </md-avatar>
+          <span>Hew</span>
       </h2>
       <div class="text-right">
         <router-link tag="md-button" v-if="loggedIn" to="/logout" class="md-raised md-accent">Sign out</router-link>
@@ -51,6 +50,9 @@
       open() {
       },
       close() {
+      },
+      gotoHome() {
+        this.$router.push({ path: '/' });
       },
     },
     components: {

@@ -30,10 +30,10 @@
       </md-toolbar>
       <md-list>
         <md-list-item v-for="(row, rowIndex) in restaurants" class="restaurant-item">
-          <div class="image-placeholder">
+          <div class="image-placeholder" @click="info(rowIndex)">
             <div class="lorem-image" v-bind:style="'background-image: url(\'http://lorempixel.com/128/128/food?'+rowIndex+'\')'"></div>
           </div>
-          <div class="md-list-text-container">
+          <div class="md-list-text-container" @click="info(rowIndex)">
             <span>{{row.name}}</span>
             <span>{{row.phone || '%phone number%'}}</span>
           </div>
@@ -90,6 +90,11 @@
         this.$refs[ref].close();
         this.$store.dispatch('updateRestaurant', this.restaurant);
       },
+      info(rowIndex) {
+        console.log('row index', rowIndex);
+        const path = `/restaurant/${rowIndex}`;
+        this.$router.push({ path });
+      },
       closeModal(ref) {
         this.$refs[ref].close();
       },
@@ -119,6 +124,8 @@
         height: 130px;
         background: #ddd;
         border: 1px solid grey;
+        margin: 10px;
+        margin-left: 0px;
         margin-right:20px;
     }
     .lorem-image {
