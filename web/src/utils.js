@@ -11,7 +11,11 @@ export default {
   getLocalTime() {
     return moment().tz(TIMEZONE).format(GO_TIME_FORMAT);
   },
-  formatDateForAPI(dateStr) {
-    return moment.utc(moment(dateStr).tz(TIMEZONE)).format(GO_TIME_FORMAT);
-  }
+  formatDateForAPI(dateStr, utc) {
+    if (utc) {
+      return moment.utc(moment(dateStr).tz(TIMEZONE)).format(GO_TIME_FORMAT);
+    } else {
+      return moment(dateStr).tz(TIMEZONE).format(GO_TIME_FORMAT);
+    }
+  },
 };

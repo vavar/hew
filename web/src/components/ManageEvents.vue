@@ -18,7 +18,7 @@
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="addActivity('activityModal')">{{dialog.action}}</md-button>
+        <md-button class="md-primary" @click="updateActivity('activityModal')">{{dialog.action}}</md-button>
         <md-button class="md-primary" @click="closeModal('activityModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -45,7 +45,7 @@
             <md-table-cell>{{row.name}}</md-table-cell>
             <md-table-cell>{{formatDate(row.closed_at)}}</md-table-cell>
             <md-table-cell>
-              <md-button class="md-icon-button">
+              <md-button class="md-icon-button" @click="openEditModal('activityModal', rowIndex)">
                 <md-icon>edit</md-icon>
               </md-button>
             </md-table-cell>
@@ -116,17 +116,28 @@ export default {
       this.time = localTime[1];
       this.$refs[ref].open();
     },
+    openEditModal(ref, rowIndex) {
+      const activity = this.openActivities[rowIndex];
+      const time = utils.formatDateForAPI(activity.closed_at).replace('Z', '').split('T');
+      this.dialog.header = 'Update event';
+      this.dialog.action = 'Update';
+      this.activity.id = activity.id;
+      this.activity.name = activity.name;
+      this.date = time[0];
+      this.time = time[1];
+      this.$refs[ref].open();
+    },
     closeModal(ref) {
       this.$refs[ref].close();
     },
-    addActivity(ref) {
-      this.activity.closed_at = utils.formatDateForAPI(`${this.date} ${this.time}`);
+    updateActivity(ref) {
+      this.activity.closed_at = utils.formatDateForAPI(`${this.date} ${this.time}`, true);
       this.$refs[ref].close();
       this.$store.dispatch('updateActivity', this.activity);
     },
     formatDate(date) {
       return utils.formatDate(date);
-    }
+    },
   },
 };
 </script>
