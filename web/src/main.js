@@ -11,7 +11,7 @@ import App from './App';
 import Home from './components/Home';
 import Login from './components/Login';
 import Order from './components/Order';
-import Restaurant from './components/Restaurant';
+import Restaurants from './components/Restaurants';
 import ManageEvents from './components/ManageEvents';
 import RestaurantMenu from './components/RestaurantMenu';
 
@@ -47,7 +47,7 @@ const router = new VueRouter({
     { path: '/', component: Home },
     { path: '/login', component: Login },
     { path: '/order', component: Order, beforeEnter: requireAuth },
-    { path: '/restaurant', component: Restaurant, beforeEnter: requireAuth },
+    { path: '/restaurants', component: Restaurants, beforeEnter: requireAuth },
     { path: '/admin/events', component: ManageEvents, beforeEnter: requireAuth },
     { path: '/restaurant/:id', component: RestaurantMenu, beforeEnter: requireAuth },
     { path: '/logout',

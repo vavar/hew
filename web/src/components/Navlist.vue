@@ -10,7 +10,7 @@
       </md-list-item>
 
       <md-list-item>
-        <md-icon>restaurant</md-icon> <router-link to="/restaurant"><span>Restaurant</span></router-link>
+        <md-icon>restaurant</md-icon> <router-link to="/restaurants"><span>Restaurants</span></router-link>
       </md-list-item>
 
       <md-list-item v-if="isAdmin">
