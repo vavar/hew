@@ -25,7 +25,7 @@
 
     <md-table-card>
       <md-toolbar>
-        <h1 class="md-title">Manage Events</h1>
+        <h1 class="md-title">Manage Open Events</h1>
         <md-button class="md-icon-button" id="custom" @click="openModal('activityModal')">
           <md-icon>add</md-icon>
         </md-button>
@@ -41,13 +41,37 @@
         </md-table-header>
 
         <md-table-body>
-          <md-table-row v-for="(row, rowIndex) in activities" :key="rowIndex" :md-item="row" md-auto-select>
+          <md-table-row v-for="(row, rowIndex) in openActivities" :key="rowIndex" :md-item="row" md-auto-select>
             <md-table-cell>{{row.name}}</md-table-cell>
             <md-table-cell>{{formatDate(row.closed_at)}}</md-table-cell>
             <md-table-cell>
               <md-button class="md-icon-button">
                 <md-icon>edit</md-icon>
               </md-button>
+            </md-table-cell>
+          </md-table-row>
+        </md-table-body>
+      </md-table>
+    </md-table-card>
+
+    <md-table-card style="margin-top: 20px">
+      <md-toolbar>
+        <h1 class="md-title">Past Events</h1>
+      </md-toolbar>
+
+      <md-table md-sort="closed-at" md-sort-type="desc">
+        <md-table-header>
+          <md-table-row>
+            <md-table-head md-sort-by="name">Name</md-table-head>
+            <md-table-head md-sort-by="closed-at">Closed At</md-table-head>
+          </md-table-row>
+        </md-table-header>
+
+        <md-table-body>
+          <md-table-row v-for="(row, rowIndex) in closedActivities" :key="rowIndex" :md-item="row" md-auto-select>
+            <md-table-cell>{{row.name}}</md-table-cell>
+            <md-table-cell>{{formatDate(row.closed_at)}}</md-table-cell>
+            <md-table-cell>
             </md-table-cell>
           </md-table-row>
         </md-table-body>
@@ -71,9 +95,12 @@ export default {
     isLoading() {
       return this.$store.getters.isLoading;
     },
-    activities() {
-      return this.$store.state.openActivities.concat(this.$store.state.closedActivities);
+    openActivities() {
+      return this.$store.state.openActivities;
     },
+    closedActivities() {
+      return this.$store.state.closedActivities;
+    }
   },
   created() {
     this.$store.dispatch('getActivities', this.activity.organization_id);
