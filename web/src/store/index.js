@@ -18,10 +18,15 @@ function fetchRestaurants(state, context) {
 }
 
 function fetchActivities(state, context) {
-  Vue.http.get(ACTIVITIES_URL).then((response) => {
-    state.restaurants = response.body;
-    context.commit('loadingState', { isLoading: false });
-  });
+  Vue.http.get(`${ACTIVITIES_URL}/${context.organizationId}?status=open`)
+    .then((response) => {
+      state.openActivities = response.body;
+      return Vue.http.get(`${ACTIVITIES_URL}/${context.organizationId}?status=closed`);
+    })
+    .then((response) => {
+      state.closedActivities = response.body;
+      context.store.commit('loadingState', { isLoading: false });
+    });
 }
 
 function fetchRestaurantInfo(state, context) {
@@ -42,7 +47,8 @@ export default new Vuex.Store({
     isLoading: false,
     restaurantMap: {},
     restaurants: [],
-    activities: [],
+    openActivities: [],
+    closedActivities: [],
   },
   getters: {
     isLoading(state) {
@@ -82,9 +88,9 @@ export default new Vuex.Store({
       commit('loadingState', { isLoading: true });
       commit('fetchRestaurantInfo', {store:context, id});
     },
-    getActivities(context) {
+    getActivities(context, organizationId) {
       context.commit('loadingState', { isLoading: true });
-      context.commit('fetchActivities', this);
+      context.commit('fetchActivities', { store: context, organizationId });
     },
     updateRestaurant(context, restaurant) {
       if (restaurant.id) {
@@ -95,6 +101,17 @@ export default new Vuex.Store({
       } else {
         Vue.http.post(RESTAURANTS_URL, restaurant).then(() => {
           context.commit('fetchRestaurants',context);
+        });
+      }
+    },
+    updateActivity(context, activity) {
+      if (activity.id) {
+        Vue.http.put(ACTIVITIES_URL, activity).then(() => {
+          context.commit('fetchActivities', { store: context, organizationId: activity.organization_id });
+        });
+      } else {
+        Vue.http.post(ACTIVITIES_URL, activity).then(() => {
+          context.commit('fetchActivities', { store: context, organizationId: activity.organization_id });
         });
       }
     },
