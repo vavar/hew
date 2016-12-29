@@ -20,13 +20,15 @@ function fetchRestaurants(state, context) {
 }
 
 function fetchActivities(state, context) {
-  Vue.http.get(`${ACTIVITIES_URL}/${context.organizationId}?status=open`)
+  console.log(`fetchActivities !`);
+  Vue.http.get(`${ACTIVITIES_URL}?org=${context.organizationId}&status=open`)
     .then((response) => {
       state.openActivities = response.body;
-      return Vue.http.get(`${ACTIVITIES_URL}/${context.organizationId}?status=closed`);
+      return Vue.http.get(`${ACTIVITIES_URL}?org=${context.organizationId}&status=closed`);
     })
     .then((response) => {
       state.closedActivities = response.body;
+      console.log(`done !`);
       context.store.commit('loadingState', { isLoading: false });
     });
 }

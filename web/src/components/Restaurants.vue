@@ -38,7 +38,7 @@
               <div class="lorem-image" v-bind:style="'background-image: url(\'http://lorempixel.com/128/128/food?'+rowIndex+'\')'"></div>
             </div>
             <div class="md-list-text-container" @click="info(row)">
-              <span>{{row.name}}</span>
+              <span>{{row.name}}<sup>[{{row.id}}]</sup></span>
               <span>{{row.phone || '%phone number%'}}</span>
             </div>
             <md-button class="md-icon-button md-list-action" @click="openEditModal('restaurantModal',rowIndex)">

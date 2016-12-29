@@ -65,6 +65,7 @@ func (database *Database) ListUsers(users *[]User) error {
 //FindUserByID - Get a user with the given ID
 func (database *Database) FindUserByID(user *User, id int) error {
 	err := database.DB.Preload("OrderItems").
+		Where("id = ?", id).
 		First(user, id).Error
 
 	if err != nil {
@@ -91,6 +92,7 @@ func (database *Database) ListOrganizations(organizations *[]Organization) error
 func (database *Database) FindOrganizationByID(organization *Organization, id int) error {
 	err := database.DB.Preload("Users").
 		Preload("Activities").
+		Where("id = ?", id).
 		First(organization, id).Error
 
 	if err != nil {
@@ -144,6 +146,7 @@ func (database *Database) UpdateRestaurant(restaurant *Restaurant) error {
 //FindRestaurantByID - Restaurant by ID
 func (database *Database) FindRestaurantByID(restaurant *Restaurant, id int) error {
 	err := database.DB.Preload("Menus").
+		Where("id = ?", id).
 		First(restaurant, id).Error
 
 	if err != nil {
@@ -205,6 +208,8 @@ func (database *Database) ListActivities(activities *[]Activity, organizationID 
 func (database *Database) FindActivityByID(activity *Activity, id int) error {
 	err := database.DB.Preload("OrderItems").
 		Preload("Restaurants").
+		Preload("Restaurants.Menus").
+		Where("id = ?", id).
 		First(activity).Error
 
 	if err != nil {
@@ -223,6 +228,7 @@ func (database *Database) AddActivityRestaurant(activity *Activity, id int) erro
 	if err := database.DB.Model(activity).Association("Restaurants").Append(restaurant).Error; err != nil {
 		return fmt.Errorf("Failed to relation an activity with restaurant ID = %d: %s", id, err)
 	}
+	database.FindActivityByID(activity, activity.ID)
 	return nil
 }
 
@@ -236,7 +242,7 @@ func (database *Database) ListOrderItems(items *[]OrderItem, userID int) error {
 
 //FindOrderItemByID - Get an order item with the given ID
 func (database *Database) FindOrderItemByID(item *OrderItem, id int) error {
-	if err := database.DB.First(item, id).Error; err != nil {
+	if err := database.DB.Where("id = ?", id).First(item, id).Error; err != nil {
 		return fmt.Errorf("Failed to get an order item with ID = %d: %s", id, err)
 	}
 	return nil

@@ -1,7 +1,7 @@
 <template>
   <div class="full-width">
-    <md-dialog md-open-from="#fab" md-close-to="#fab" ref="menuModal">
-      <md-dialog-title>Add {{ restaurantName }}'s menu</md-dialog-title>
+    <md-dialog class="add-order-dialog" md-open-from="#fab" md-close-to="#fab" ref="menuModal">
+      <md-dialog-title>Add {{ restaurant.name }}'s menu</md-dialog-title>
       <md-dialog-content>
         <form>
           <md-input-container>
@@ -29,12 +29,12 @@
         <md-button class="md-primary" @click="closeModal('menuModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
-      <md-toolbar class="md-accent">
-        <h2 class="md-title" style="flex: 1">List</h2>
-        <md-button v-if="loggedIn" class="md-raised md-button md-default" id="addMenu" @click="openModal('menuModal')">
+      <md-toolbar>
+        <h2 class="md-title md-left-align">Order List</h2>
+        <md-button v-if="loggedIn" class="md-raised md-button md-warn" id="addMenu" @click="openModal('menuModal')">
           <md-icon>add</md-icon><span> Add order</span>
         </md-button>
-      </md-toolbar> 
+      </md-toolbar>
       <md-table md-sort="restaurant" md-sort-type="desc" @sort="onSort">
         <md-table-header>
           <md-table-row>
@@ -47,7 +47,7 @@
         </md-table-header>
 
         <md-table-body>
-          <md-table-row v-for="(row, rowIndex) in menu" :key="rowIndex" :md-item="row" md-auto-select>
+          <md-table-row v-for="(row, rowIndex) in restaurant.menus" :key="rowIndex" :md-item="row" md-auto-select>
             <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex" :md-numeric="columnIndex !== 'user' && columnIndex !== 'name'">
               {{ column }}
             </md-table-cell>
@@ -68,7 +68,7 @@
         md-separator="of"
         :md-page-options="[10, 20, 40]"
         @pagination="onPagination">
-      </md-table-pagination> 
+      </md-table-pagination>
   </div>
 </template>
 
@@ -77,7 +77,7 @@ import auth from '../auth';
 
 export default {
   name: 'order',
-  props: ['restaurant-name'],
+  props: ['restaurant','orders'],
   data: () => ({
     loggedIn: auth.loggedIn(),
     loading: false,
@@ -141,6 +141,9 @@ export default {
 </script>
 
 <style>
+  .add-order-dialog {
+    min-width: 600px;
+  }
   .full-width {
     width: 100%;
   }

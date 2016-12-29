@@ -1,31 +1,25 @@
 <template>
-  <md-layout md-gutter>
-    <md-layout md-gutter md-flex="80" md-flex-offset="10">
+  <md-layout md-gutter v-if="!isLoading">
+    <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
+    <md-layout md-flex-small="80" md-flex-medium="80" md-flex-large="80" md-flex-xlarge="60">
       <md-card class="activity-card" v-for="act in activities">
-        <md-toolbar md-theme="white" class="md-dense">
+        <md-toolbar class="md-dense">
           <h2 class="md-title">
             <md-icon>event</md-icon>
-            <span>{{act.name}}</span>
+            <span>{{act.name}}<sup>[{{act.id}}]</sup></span>
           </h2>
           <span class="gutter"></span>
         </md-toolbar>
         <md-table-card>
-          <md-tabs class="md-transparent activity-tabs" md-right>
+          <md-tabs class="md-transparent activity-tabs">
             <md-tab v-bind:md-label="res.name" v-for="(res,index) in act.restaurants" class="restaurant-tab">
-              <md-layout md-gutter>
-                <md-layout md-row md-gutter>
-                  <md-layout md-flex="90" md-flex-offset="5">
-                    <order :restaurantName="res.name"></order>
-                  </md-layout>
-                  <md-layout>
-                  </md-layout>
-                </md-layout>
-              </md-layout>
+              <order :restaurant="res"></order>
             </md-tab>
           </md-tabs>
         </md-table-card>
       </md-card>
     </md-layout>
+    <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
   </md-layout>
 </template>
 
@@ -36,26 +30,37 @@
     name: 'home',
     data() {
       return {
-        activities: [
-          {
-            name: 'Monday Lunch',
-            restaurants: [
-              { id: 1, name: 'ครัวคุณวี', menus: [{ id: 1, name: 'ข้าวกระเพราไก่', price: 80 }] },
-              { id: 2, name: 'DJ Poom', menus: [{ id: 1, name: 'ข้าวกระเพราไก่', price: 80 }] },
-            ],
-          },
-          {
-            name: 'Tuesday Lunch',
-            restaurants: [{ id: 1, name: 'ครัวคุณวี' }, { id: 2, name: 'DJ Poom' }],
-          },
-        ],
+        // activities: [
+        //   {
+        //     name: 'Monday Lunch',
+        //     restaurants: [
+        //       { id: 1, name: 'ครัวคุณวี', menus: [{ id: 1, name: 'ข้าวกระเพราไก่', price: 80 }] },
+        //       { id: 2, name: 'DJ Poom', menus: [{ id: 1, name: 'ข้าวกระเพราไก่', price: 80 }] },
+        //     ],
+        //   },
+        //   {
+        //     name: 'Tuesday Lunch',
+        //     restaurants: [{ id: 1, name: 'ครัวคุณวี' }, { id: 2, name: 'DJ Poom' }],
+        //   },
+        // ],
       };
     },
-    // computed: {
-    //   activities() {
-    //     return this.$store.state.activities;
-    //   },
-    // },
+    computed: {
+      activities() {
+        return this.$store.state.openActivities;
+      },
+      isLoading() {
+        return this.$store.getters.isLoading;
+      },
+    },
+    methods: {
+      fetchData() {
+        this.$store.dispatch('getActivities',1);
+      },
+    },
+    created() {
+      this.fetchData();
+    },
     components: {
       Order,
     },
@@ -79,7 +84,7 @@
   margin-bottom: 20px;
 }
 .activity-tabs {
-  margin-top: -48px;
+  /*margin-top: -48px;*/
 }
 .gutter {
   flex: 1;
