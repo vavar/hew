@@ -54,7 +54,7 @@ export default {
   color: red;
 }
 .page {
-  width: 600px;
+  width: 960px;
   margin: 0 auto;
 }
 </style>
