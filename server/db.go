@@ -102,7 +102,6 @@ func (database *Database) FindOrganizationByID(organization *Organization, id in
 //ListRestaurants - database wrapper
 func (database *Database) ListRestaurants(restaurants *[]Restaurant) error {
 	err := database.DB.Preload("Menus").
-		Preload("Activities").
 		Find(restaurants).Error
 
 	if err != nil {
@@ -144,7 +143,6 @@ func (database *Database) UpdateRestaurant(restaurant *Restaurant) error {
 //FindRestaurantByID - Restaurant by ID
 func (database *Database) FindRestaurantByID(restaurant *Restaurant, id int) error {
 	err := database.DB.Preload("Menus").
-		Preload("Activities").
 		First(restaurant, id).Error
 
 	if err != nil {
@@ -180,6 +178,7 @@ func (database *Database) DeleteMenu(menu *Menu) error {
 func (database *Database) ListActivities(activities *[]Activity, organizationID int) error {
 	err := database.DB.Preload("OrderItems").
 		Where(&Activity{OrganizationID: organizationID}).
+		Preload("Restaurants").
 		Find(activities).Error
 
 	if err != nil {
@@ -192,6 +191,7 @@ func (database *Database) ListActivities(activities *[]Activity, organizationID 
 //FindActivityByID - Get an activity with the given ID
 func (database *Database) FindActivityByID(activity *Activity, id int) error {
 	err := database.DB.Preload("OrderItems").
+		Preload("Restaurants").
 		First(activity).Error
 
 	if err != nil {
