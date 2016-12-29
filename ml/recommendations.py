@@ -97,19 +97,34 @@ def get_rating():
     """
     Get the average ratings for a given menu_id
     :query_param menu: the id of the meal in question
+    :returns List of average ratings objects (list of length 1 when menu param is set) for each menu
     """
     menu_id = request.args.get('menu')
-    if menu_id is None:
-        raise ValueError('A menu id must be provided in the query string e.g. /api/ratings/?menu=21')
+    restaurant_id = request.args.get('restaurant')
+    if menu_id is None and restaurant_id is None:
+        raise ValueError('A menu or restaurant must be provided in the query string e.g. /api/ratings/?menu=21')
     session = Session()
     avg_ratings = session.query(
+        Rating.menu_id,
         func.avg(Rating.portion_size).label('portion_size'),
         func.avg(Rating.healthiness).label('healthiness'),
         func.avg(Rating.sweetness).label('sweetness'),
         func.avg(Rating.spice_level).label('spice_level'),
         func.avg(Rating.rating).label('rating'),
-    ).filter(Rating.menu_id == menu_id).first()
-    return jsonify({key: getattr(avg_ratings, key) for key in avg_ratings._fields})
+    )
+    if menu_id is not None:
+        avg_ratings = avg_ratings.filter(Rating.menu_id == menu_id)
+    else:
+        avg_ratings = avg_ratings.filter(Rating.restaurant_id == restaurant_id).group_by(Rating.menu_id)
+    return jsonify([_serialize_ratings_row(row) for row in avg_ratings])
+
+
+def _serialize_ratings_row(row):
+    """
+    Converts the namedtuple-like row that sqlalchemy returns into a dict that resembles the object used to create
+    a rating.
+    """
+    return {'menu_id': row.menu_id, 'ratings': {key: getattr(row, key) for key in row._fields if key != 'menu_id'}}
 
 
 # http://flask.pocoo.org/docs/0.12/server/#in-code
