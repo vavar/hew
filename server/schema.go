@@ -23,11 +23,10 @@ type Organization struct {
 
 //Restaurant record
 type Restaurant struct {
-	ID         int        `json:"id"         gorm:"primary_key;AUTO_INCREMENT"`
-	Name       string     `json:"name"       gorm:"type:varchar(500)"`
-	Phone      string     `json:"phone"      gorm:"type:varchar(50)"`
-	Menus      []Menu     `json:"menus"`
-	Activities []Activity `json:"activities" gorm:"many2many:restaurants_activities"`
+	ID    int    `json:"id"    gorm:"primary_key;AUTO_INCREMENT"`
+	Name  string `json:"name"  gorm:"type:varchar(500)"`
+	Phone string `json:"phone" gorm:"type:varchar(50)"`
+	Menus []Menu `json:"menus"`
 }
 
 //Menu record
@@ -41,13 +40,14 @@ type Menu struct {
 
 //Activity record
 type Activity struct {
-	ID             int         `json:"id"              gorm:"primary_key;AUTO_INCREMENT"`
-	Name           string      `json:"name"            gorm:"type:varchar(255)"`
-	ClosedAt       time.Time   `json:"closed_at"`
-	OrganizationID int         `json:"organization_id"`
-	OrderItems     []OrderItem `json:"order_items"`
-	CreatedAt      time.Time   `json:"created_at"`
-	UpdatedAt      time.Time   `json:"updated_at"`
+	ID             int          `json:"id"              gorm:"primary_key;AUTO_INCREMENT"`
+	Name           string       `json:"name"            gorm:"type:varchar(255)"`
+	ClosedAt       time.Time    `json:"closed_at"`
+	OrganizationID int          `json:"organization_id"`
+	OrderItems     []OrderItem  `json:"order_items"`
+	CreatedAt      time.Time    `json:"created_at"`
+	UpdatedAt      time.Time    `json:"updated_at"`
+	Restaurants    []Restaurant `json:"restaurants"     gorm:"many2many:activities_restaurants"`
 }
 
 //OrderItem record
