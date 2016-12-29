@@ -12,6 +12,11 @@ type ActivityService struct {
 	DB *Database
 }
 
+//ListActivitiesParams - Query parameters passed to endpoint GET /api/activities/:organizationID
+type ListActivitiesParams struct {
+	Status string `form:"status"`
+}
+
 //NewActivityService - Instantiate Activity Service
 func NewActivityService(db *Database) *ActivityService {
 	return &ActivityService{db}
@@ -25,8 +30,13 @@ func (service *ActivityService) ListActivities(c *gin.Context) {
 		return
 	}
 
+	var params ListActivitiesParams
+	if err := c.Bind(&params); err != nil {
+		errorJSON(c, http.StatusBadRequest, err)
+	}
+
 	var activities []Activity
-	if err := service.DB.ListActivities(&activities, organizationID); err != nil {
+	if err := service.DB.ListActivities(&activities, organizationID, params.Status); err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}

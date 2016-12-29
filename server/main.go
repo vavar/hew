@@ -57,7 +57,7 @@ func main() {
 	api.PUT("/menus", restaurantService.UpdateMenu)
 
 	var activityService = NewActivityService(db)
-	api.GET("/activities/:organizationID", activityService.ListActivities)
+	api.GET("/activities/:organizationID", activityService.ListActivities) // query params: status(open, closed)
 	api.POST("/activities", activityService.CreateActivity)
 	api.PUT("/activities", activityService.UpdateActivity)
 
