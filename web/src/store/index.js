@@ -7,20 +7,20 @@ const BASE_URL = 'http://hew.abct.io';
 const RESTAURANTS_URL = `${BASE_URL}/api/restaurants`;
 const ACTIVITIES_URL = `${BASE_URL}/api/activities`;
 
-function fetchRestaurants({state, commit}) {
+function fetchRestaurants(state, context) {
   Vue.http.get(RESTAURANTS_URL).then((response) => {
     state.restaurants = response.body;
     state.restaurants.forEach((rest) => {
       state.restaurantMap[rest.id] = rest;
     });
-    commit('loadingState', { isLoading: false });
+    context.commit('loadingState', { isLoading: false });
   });
 }
 
-function fetchActivities({state, commit}) {
+function fetchActivities(state, context) {
   Vue.http.get(ACTIVITIES_URL).then((response) => {
     state.restaurants = response.body;
-    commit('loadingState', { isLoading: false });
+    context.commit('loadingState', { isLoading: false });
   });
 }
 
@@ -62,6 +62,7 @@ export default new Vuex.Store({
   },
   actions: {
     getRestaurants(context) {
+      context.commit('loadingState', { isLoading: true });
       context.commit('fetchRestaurants', context);
     },
     getRestaurant(context, {id}) {
@@ -82,6 +83,7 @@ export default new Vuex.Store({
       commit('fetchRestaurantInfo', {store:context, id});
     },
     getActivities(context) {
+      context.commit('loadingState', { isLoading: true });
       context.commit('fetchActivities', this);
     },
     updateRestaurant(context, restaurant) {

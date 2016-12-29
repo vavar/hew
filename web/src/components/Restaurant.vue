@@ -1,5 +1,5 @@
 <template>
-  <div class="page content">
+  <div class="page content" v-if="!isLoading">
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="restaurantModal">
       <md-dialog-title>{{dialog.header}}</md-dialog-title>
 
@@ -30,10 +30,10 @@
       </md-toolbar>
       <md-list>
         <md-list-item v-for="(row, rowIndex) in restaurants" class="restaurant-item">
-          <div class="image-placeholder" @click="info(row.id)">
+          <div class="image-placeholder" @click="info(row)">
             <div class="lorem-image" v-bind:style="'background-image: url(\'http://lorempixel.com/128/128/food?'+rowIndex+'\')'"></div>
           </div>
-          <div class="md-list-text-container" @click="info(rowIndex)">
+          <div class="md-list-text-container" @click="info(row)">
             <span>{{row.name}}</span>
             <span>{{row.phone || '%phone number%'}}</span>
           </div>
@@ -60,6 +60,9 @@
       };
     },
     computed: {
+      isLoading() {
+        return this.$store.getters.isLoading;
+      },
       restaurants() {
         return this.$store.state.restaurants;
       },
@@ -90,9 +93,8 @@
         this.$refs[ref].close();
         this.$store.dispatch('updateRestaurant', this.restaurant);
       },
-      info(rowIndex) {
-        console.log('row index', rowIndex);
-        const path = `/restaurant/${rowIndex}`;
+      info(row) {
+        const path = `/restaurant/${row.id}`;
         this.$router.push({ path });
       },
       closeModal(ref) {
