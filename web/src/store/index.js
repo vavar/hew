@@ -3,11 +3,18 @@ import Vuex from 'vuex';
 
 /* global console */
 /* eslint no-console: ["error", { allow: ["warn", "error","log"] }] */
+const BASE_URL = 'http://hew.abct.io';
+const RESTAURANTS_URL = `${BASE_URL}/api/restaurants`;
+const ACTIVITIES_URL = `${BASE_URL}/api/activities`;
 
-const URL = 'http://hew.abct.io/api/restaurants';
-// const URL = 'http://localhost:8080/api/restaurants';
 const fetchRestaurants = function fetchRestaurants(context) {
-  Vue.http.get(URL).then((response) => {
+  Vue.http.get(RESTAURANTS_URL).then((response) => {
+    context.restaurants = response.body;
+  });
+};
+
+const fetchActivities = function fetchActivities(context) {
+  Vue.http.get(ACTIVITIES_URL).then((response) => {
     context.restaurants = response.body;
   });
 };
@@ -17,23 +24,27 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     restaurants: [],
+    activities: [],
   },
   mutations: {
     fetchRestaurants,
+    fetchActivities,
   },
   actions: {
     getRestaurants({ commit }) {
       commit('fetchRestaurants');
     },
+    getActivities({ commit }) {
+      commit('fetchActivities');
+    },
     updateRestaurant(context, restaurant) {
       if (restaurant.id) {
-        console.log('update !');
-        Vue.http.put(URL, restaurant).then((response) => {
+        Vue.http.put(RESTAURANTS_URL, restaurant).then((response) => {
           console.log(response.body);
           context.commit('fetchRestaurants');
         });
       } else {
-        Vue.http.post(URL, restaurant).then(() => {
+        Vue.http.post(RESTAURANTS_URL, restaurant).then(() => {
           context.commit('fetchRestaurants');
         });
       }
