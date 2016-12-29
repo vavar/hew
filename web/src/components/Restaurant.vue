@@ -30,7 +30,7 @@
       </md-toolbar>
       <md-list>
         <md-list-item v-for="(row, rowIndex) in restaurants" class="restaurant-item">
-          <div class="image-placeholder" @click="info(rowIndex)">
+          <div class="image-placeholder" @click="info(row.id)">
             <div class="lorem-image" v-bind:style="'background-image: url(\'http://lorempixel.com/128/128/food?'+rowIndex+'\')'"></div>
           </div>
           <div class="md-list-text-container" @click="info(rowIndex)">
