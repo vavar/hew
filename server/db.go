@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"time"
 
 	"log"
 
@@ -175,10 +176,20 @@ func (database *Database) DeleteMenu(menu *Menu) error {
 }
 
 //ListActivities - List all activities made by an organization
-func (database *Database) ListActivities(activities *[]Activity, organizationID int) error {
-	err := database.DB.Preload("OrderItems").
-		Where(&Activity{OrganizationID: organizationID}).
+func (database *Database) ListActivities(activities *[]Activity, organizationID int, status string) error {
+	now := time.Now().UTC().Format(time.UnixDate)
+
+	filteredActivities := database.DB
+	switch status {
+	case "open":
+		filteredActivities = database.DB.Where("closed_at > ?", now)
+	case "closed":
+		filteredActivities = database.DB.Where("closed_at <= ?", now)
+	}
+
+	err := filteredActivities.Preload("OrderItems").
 		Preload("Restaurants").
+		Where(&Activity{OrganizationID: organizationID}).
 		Find(activities).Error
 
 	if err != nil {

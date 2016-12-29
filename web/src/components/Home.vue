@@ -1,6 +1,6 @@
 <template>
   <md-layout md-gutter>
-    <md-layout md-gutter md-flex="70" md-flex-offset="15">
+    <md-layout md-gutter md-flex="80" md-flex-offset="10">
       <md-card class="activity-card" v-for="act in activities">
         <md-toolbar md-theme="white" class="md-dense">
           <h2 class="md-title">
@@ -9,13 +9,13 @@
           </h2>
           <span class="gutter"></span>
         </md-toolbar>
-        <md-card-area>
+        <md-table-card>
           <md-tabs class="md-transparent activity-tabs" md-right>
             <md-tab v-bind:md-label="res.name" v-for="(res,index) in act.restaurants" class="restaurant-tab">
               <md-layout md-gutter>
                 <md-layout md-row md-gutter>
-                  <md-layout md-flex="60">
-                    <order-today></order-today>
+                  <md-layout md-flex="90" md-flex-offset="5">
+                    <order :restaurantName="res.name"></order>
                   </md-layout>
                   <md-layout>
                   </md-layout>
@@ -23,14 +23,14 @@
               </md-layout>
             </md-tab>
           </md-tabs>
-        </md-card-area>
+        </md-table-card>
       </md-card>
     </md-layout>
   </md-layout>
 </template>
 
 <script>
-  import OrderToday from './OrderToday';
+  import Order from './Order';
 
   export default {
     name: 'home',
@@ -57,7 +57,7 @@
     //   },
     // },
     components: {
-      OrderToday,
+      Order,
     },
   };
 </script>
