@@ -80,6 +80,19 @@ app = Flask(__name__)
 
 @app.route('/api/ratings/', methods=['POST'])
 def add_rating():
+    """
+    Create a new rating for a meal.  Request body should be json in the below format:
+    (yaml representation, square brackets means optional)
+    user_id: int
+    menu_id: int
+    restaurant_id: int
+    ratings:
+        [portion_size]: 1 <= int <= 10
+        [healthiness]: 1 <= int <= 10
+        [sweetness]: 1 <= int <= 10
+        [spice_level]: 1 <= int <= 10
+        [rating]: 1 <= int <= 10
+    """
     data = request.get_json()
     REQUIRED_PARAMS = frozenset(['user_id', 'menu_id', 'restaurant_id', 'ratings'])
     missing_params = [param for param in REQUIRED_PARAMS if param not in data]
