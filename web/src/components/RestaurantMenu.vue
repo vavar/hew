@@ -22,44 +22,45 @@
       </md-dialog-actions>
     </md-dialog>
 
-    <md-layout md-gutter md-row>
-      <md-layout md-flex="60" md-flex-offset="20">
-        <md-table-card>
-          <md-toolbar>
-            <h1 class="md-title">{{restaurant.name}}</h1>
-            <md-button class="md-icon-button" id="custom" @click="openModal('menuModal')">
-              <md-icon>playlist_add</md-icon>
-            </md-button>
-          </md-toolbar>
-          <md-table md-sort="restaurant" md-sort-type="desc" @sort="onSort">
-            <md-table-header>
-              <md-table-row>
-                <md-table-head md-sort-by="name">Menu</md-table-head>
-                <md-table-head md-sort-by="price">price</md-table-head>
-                <md-table-head>action</md-table-head>
-              </md-table-row>
-            </md-table-header>
+    <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
+    <md-layout md-flex-small="80" md-flex-medium="80" md-flex-large="80" md-flex-xlarge="60" >
+      <md-table-card>
+        <md-toolbar class="md-accent">
+          <h1 class="md-title md-left-align">
+            <md-icon>store</md-icon> {{restaurant.name}}</h1>
+          <md-button class="md-icon-button md-raised md-warn" id="custom" @click="openModal('menuModal')">
+            <md-icon>playlist_add</md-icon>
+          </md-button>
+        </md-toolbar>
+        <md-table md-sort="restaurant" md-sort-type="desc" @sort="onSort">
+          <md-table-header>
+            <md-table-row>
+              <md-table-head md-sort-by="name">Menu</md-table-head>
+              <md-table-head md-sort-by="price">price</md-table-head>
+              <md-table-head>action</md-table-head>
+            </md-table-row>
+          </md-table-header>
 
-            <md-table-body>
-              <md-table-row v-for="(row, rowIndex) in restaurant.menus" :key="rowIndex" :md-item="row" md-auto-select>
-                <md-table-cell v-for="(column, columnIndex) in [row.name, row.price]" :key="columnIndex">
-                  {{ column }}
-                </md-table-cell>
-                <md-table-cell>
-                  <md-button class="md-icon-button"  @click="openEditModal('menuModal',row)">
-                    <md-icon>create</md-icon>
-                  </md-button>
-                </md-table-cell>
-              </md-table-row>
-            </md-table-body>
-          </md-table>
+          <md-table-body>
+            <md-table-row v-for="(row, rowIndex) in restaurant.menus" :key="rowIndex" :md-item="row" md-auto-select>
+              <md-table-cell v-for="(column, columnIndex) in [row.name, row.price]" :key="columnIndex">
+                {{ column }}
+              </md-table-cell>
+              <md-table-cell>
+                <md-button class="md-icon-button" @click="openEditModal('menuModal',row)">
+                  <md-icon>create</md-icon>
+                </md-button>
+              </md-table-cell>
+            </md-table-row>
+          </md-table-body>
+        </md-table>
 
-          <md-table-pagination md-size="5" md-total="10" md-page="1" md-label="Rows" md-separator="of" :md-page-options="[5, 10, 25, 50]"
-            @pagination="onPagination"></md-table-pagination>
+        <md-table-pagination md-size="5" md-total="10" md-page="1" md-label="Rows" md-separator="of" :md-page-options="[5, 10, 25, 50]"
+          @pagination="onPagination"></md-table-pagination>
 
-        </md-table-card>
-      </md-layout>
+      </md-table-card>
     </md-layout>
+    <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
   </md-layout>
 </template>
 
@@ -75,7 +76,7 @@
       menu: { id: '', name: '', price: '', restaurant_id: '' },
     }),
     computed: {
-      restaurant(){
+      restaurant() {
         return this.$store.state.activeRestaurant;
       },
       isLoading() {
@@ -96,7 +97,7 @@
         this.error = this.post = null;
         this.loading = true;
         this.restaurantID = this.$route.params.id;
-        this.$store.dispatch('getRestaurant', {id:this.restaurantID});
+        this.$store.dispatch('getRestaurant', { id: this.restaurantID });
       },
       openModal(ref) {
         this.dialog.header = 'Create new Menu';
@@ -140,6 +141,9 @@
 </script>
 
 <style>
+  .md-left-align {
+    text-align: left;
+  }
   .md-table-card {
     width: 100%;
   }
