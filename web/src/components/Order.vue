@@ -3,7 +3,7 @@
     <add-order :restaurant="restaurant"></add-order>
       <md-toolbar>
         <h2 class="md-title md-left-align">Order List</h2>
-        <md-button v-if="loggedIn" class="md-raised md-button md-warn" id="addMenu" @click="openModal('menuModal')">
+        <md-button v-if="$auth.ready() && loaded" class="md-raised md-button md-warn" id="addMenu" @click="openModal('menuModal')">
           <md-icon>add</md-icon><span> Add order</span>
         </md-button>
       </md-toolbar>

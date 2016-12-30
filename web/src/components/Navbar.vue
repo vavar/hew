@@ -11,8 +11,9 @@
           <span>Hew</span>
       </h2>
       <div class="text-right">
-        <router-link tag="md-button" v-if="loggedIn" to="/logout" class="md-raised md-accent">Sign out</router-link>
-        <router-link tag="md-button" v-if="!loggedIn" to="/login" class="md-raised md-warn">Sign in</router-link>
+        <label>{{ $auth.user().email }}</label>
+        <router-link tag="md-button" v-if="$auth.ready() && loaded" v-on:click="$auth.logout()" class="md-raised md-accent">Log out</router-link>
+        <router-link tag="md-button" v-if="!$auth.check()" to="/login" class="md-raised md-warn">Sign in</router-link>
       </div>
     </md-toolbar>
 

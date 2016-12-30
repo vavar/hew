@@ -13,10 +13,10 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Order from './components/Order';
 import AddOrder from './components/AddOrder';
+import Register from './components/Register';
 import Restaurants from './components/Restaurants';
 import ManageEvents from './components/ManageEvents';
 import RestaurantMenu from './components/RestaurantMenu';
-import Signup from './components/Signup';
 
 Vue.use(VueMaterial);
 Vue.use(VueResource);
@@ -32,43 +32,38 @@ Vue.material.registerTheme('default', {
   background: 'white',
 });
 
-function requireAuth(to, from, next) {
-  if (!auth.loggedIn()) {
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath },
-    });
-  } else if (to.fullPath.startsWith('/admin') && !auth.isAdmin()) {
-    next('/');
-  } else {
-    next();
-  }
-}
+Vue.http.options.root = 'http://hew.abct.io';
 
-const router = new VueRouter({
+Vue.router = new VueRouter({
   // mode: 'history',
   // linkActiveClass: 'active',
   // base: __dirname,
   routes: [
-    { path: '/', component: Home },
-    { path: '/login', component: Login },
-    { path: '/signup', component: Signup },
-    { path: '/order', component: Order, beforeEnter: requireAuth },
-    { path: '/restaurants', component: Restaurants, beforeEnter: requireAuth },
-    { path: '/admin/events', component: ManageEvents, beforeEnter: requireAuth },
-    { path: '/restaurant/:id', component: RestaurantMenu, beforeEnter: requireAuth },
-    { path: '/logout',
-      beforeEnter(to, from, next) {
-        auth.logout();
-        next('/');
-      },
+    { path: '/', name: 'home', component: Home },
+    { path: '/login', name: 'login', component: Login, meta: {auth: false} },
+    { path: '/register', name: 'register', component: Register, meta: {auth: false} },
+    { path: '/order', name:'order', component: Order, meta: {auth: true} },
+    { path: '/restaurants', name:'restaurants', component: Restaurants, meta: {auth: true}, 
+      children: [{
+          path: ':id',
+          name: 'restaurant-id',
+          component: RestaurantMenu,
+      }],
     },
+    { path: '/admin/events', component: ManageEvents, meta: {auth: 'admin'}, },
   ],
+});
+
+Vue.use(require('@websanova/vue-auth'), {
+    auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
+    http: require('@websanova/vue-auth/drivers/http/vue-resource.1.x.js'),
+    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
+    rolesVar: 'role',
 });
 
 /* eslint-disable no-new */
 new Vue({
-  router,
+  router : Vue.router,
   store,
   el: '#app',
   template: '<App/>',
