@@ -33,6 +33,7 @@ func main() {
 	var db = InitDBConnection()
 
 	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
 	corsConfig.AddAllowMethods("DELETE")
 
 	router := gin.Default()
