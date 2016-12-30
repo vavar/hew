@@ -51,12 +51,16 @@ function updateRestaurantsInActivity(activity, selectedRestaurants) {
   return Promise.coroutine(function* () {
     for (let i = 0; i < selectedRestaurants.length; i += 1) {
       let restaurantId = selectedRestaurants[i];
-      if (!activity.restaurants.some(restaurant => restaurant.id === restaurantId)) {
+      if (!activity.restaurants || !activity.restaurants.some(restaurant => restaurant.id === restaurantId)) {
         yield Vue.http.post(url, {
           activity_id: activity.id,
           restaurant_id: restaurantId,
         });
       }
+    }
+
+    if (!activity.restaurants) {
+      return;
     }
 
     for (let i = 0; i < activity.restaurants.length; i += 1) {
