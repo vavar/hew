@@ -17,7 +17,8 @@
             <md-input required v-model="pass" placeholder="password" type="password"></md-input>
             <span class="md-error">Hint: pass</span>
           </md-input-container>
-          <md-button class="md-primary md-raised" type="submit">login</md-button>
+          <md-button class="md-primary md-raised" type="submit">log in</md-button>
+          <router-link tag="md-button" class="md-primary md-raised" to="/signup">sign up</router-link>
         </form>
       </md-card-content>
     </md-card>  

@@ -9,6 +9,7 @@ const BASE_URL = 'http://hew.abct.io';
 const RESTAURANTS_URL = `${BASE_URL}/api/restaurants`;
 const ACTIVITIES_URL = `${BASE_URL}/api/activities`;
 const MENU_URL = `${BASE_URL}/api/menus`;
+const USER_URL = `${BASE_URL}/api/users`;
 
 function fetchRestaurants(state, context) {
   Vue.http.get(RESTAURANTS_URL).then((response) => {
@@ -129,6 +130,9 @@ export default new Vuex.Store({
           context.commit('fetchActivities', { store: context, organizationId: activity.organization_id });
         });
       }
+    },
+    addUser(context, user) {
+      Vue.http.post(USER_URL, user).then(() => {});
     },
   },
 });
