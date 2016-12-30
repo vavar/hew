@@ -1,8 +1,8 @@
 <template>
   <div class="full-width">
-    <md-dialog class="add-order-dialog" md-open-from="#fab" md-close-to="#fab" ref="menuModal">
+    <md-dialog md-open-from="#fab" md-close-to="#fab" ref="menuModal">
       <md-dialog-title>Add {{ restaurant.name }}'s menu</md-dialog-title>
-      <md-dialog-content>
+      <md-dialog-content class="add-order-dialog">
         <form>
           <md-input-container>
             <label>Menu</label>
