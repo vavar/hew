@@ -67,6 +67,7 @@ func (service *UserService) RegisterUser(c *gin.Context) {
 
 	//TODO: removing hardcode
 	json.OrganizationID = 1
+	json.Role = "user"
 
 	if err := service.DB.Create(&json); err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
@@ -112,5 +113,22 @@ func (service *UserService) UpdateUser(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusOK, user)
+}
+
+//GetUserDetails - get user details
+func (service *UserService) GetUserDetails(c *gin.Context) {
+	var user User
+	if err := c.BindJSON(&user); err != nil {
+		errorJSON(c, http.StatusBadRequest, err)
+		return
+	}
+
+	if findErr := service.DB.DB.Select("id, username, email, organizationid, role").
+		Where("email =?", user.Email).
+		Find(&user).Error; findErr != nil {
+		errorJSON(c, http.StatusBadRequest, findErr)
+		return
+	}
 	c.JSON(http.StatusOK, user)
 }

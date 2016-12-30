@@ -81,6 +81,7 @@ func main() {
 	}
 
 	router.POST("/login", authMiddleware.LoginHandler)
+	var userService = NewUserService(db)
 	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
@@ -89,20 +90,20 @@ func main() {
 				"text": "Hello World.",
 			})
 		})
-		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
+		auth.GET("/token", authMiddleware.RefreshHandler)
+		auth.GET("/login", authMiddleware.LoginHandler)
+		auth.POST("/login", authMiddleware.LoginHandler)
+		auth.POST("/register", userService.RegisterUser)
+		auth.GET("/user", userService.GetUserDetails)
 	}
 
 	api := router.Group("/api")
-	api.GET("/auth/login", authMiddleware.LoginHandler)
-	api.POST("/auth/login", authMiddleware.LoginHandler)
-	api.POST("/auth/refresh_token", authMiddleware.LoginHandler)
-
-	var userService = NewUserService(db)
 	api.GET("/users", userService.ListUsers)
 	api.POST("/users", userService.AddUser)
 	api.GET("/users/:id", userService.GetByID)
 	api.PUT("/users", userService.UpdateUser)
-	api.POST("/auth/register", userService.RegisterUser)
+
+	//cross endpoint
 
 	var organizationService = NewOrganizationService(db)
 	api.GET("/organizations", organizationService.ListOrganizations)
