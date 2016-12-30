@@ -96,6 +96,7 @@ func main() {
 	api.GET("/auth/login", authMiddleware.LoginHandler)
 	api.POST("/auth/login", authMiddleware.LoginHandler)
 	api.POST("/auth/refresh_token", authMiddleware.LoginHandler)
+	api.POST("/auth/register", userService.RegisterUser)
 
 	var userService = NewUserService(db)
 	api.GET("/users", userService.ListUsers)
