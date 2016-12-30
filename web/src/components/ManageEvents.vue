@@ -14,14 +14,12 @@
             <md-input required type="date" v-model="date"></md-input>
             <md-input required type="time" v-model="time"></md-input>
           </md-input-container>
-          <md-input-container>
+          <div class="text-left">
             <label>Restaurants</label>
-            <md-select v-model="selectedRestaurants" multiple>
-              <md-option v-for="(restaurant, index) in restaurants" :value="restaurant.id">{{restaurant.name}}</md-option>
-            </md-select>
-          </md-input-container>
+            <md-checkbox class="restaurant-option" v-for="restaurant in restaurants" v-model="restaurantBool[restaurant.id]">{{restaurant.name}}</md-checkbox>
+          </div>
         </form>
-
+      </md-dialog-content>
       <md-dialog-actions>
         <md-button class="md-primary" @click="updateActivity('activityModal')">{{dialog.action}}</md-button>
         <md-button class="md-primary" @click="closeModal('activityModal')">Cancel</md-button>
@@ -93,7 +91,7 @@ export default {
     date: '',
     time: '',
     activity: { id: '', name: '', closed_at: '', organization_id: 1 },
-    selectedRestaurants: [],
+    restaurantBool: {},
   }),
   computed: {
     isLoading() {
@@ -122,17 +120,29 @@ export default {
       this.activity.name = '';
       this.date = localTime[0];
       this.time = localTime[1];
-      this.selectedRestaurants = [];
+      this.restaurantBool = {};
+      this.restaurants.map((restaurant) => {
+        this.restaurantBool[restaurant.id] = false;
+      });
       this.$refs[ref].open();
     },
     openEditModal(ref, row) {
       const activity = row;
       const time = utils.formatDateForAPI(activity.closed_at).replace('Z', '').split('T');
 
+      this.restaurantBool = {};
       if (row.restaurants) {
-        this.selectedRestaurants = row.restaurants.map(restaurant => restaurant.id);
+        this.restaurants.map((restaurant) => {
+          if (row.restaurants.some(item => item.id === restaurant.id)) {
+            this.restaurantBool[restaurant.id] = true;
+          } else {
+            this.restaurantBool[restaurant.id] = false;
+          }
+        });
       } else {
-        this.selectedRestaurants = [];
+        this.restaurants.map((restaurant) => {
+          this.restaurantBool[restaurant.id] = false;
+        });
       }
 
       this.dialog.header = 'Update event';
@@ -152,7 +162,7 @@ export default {
       }
       this.activity.closed_at = utils.formatDateForAPI(`${this.date} ${this.time}`, true);
       this.$refs[ref].close();
-      this.$store.dispatch('updateActivity', { activity: this.activity, selectedRestaurants: this.selectedRestaurants });
+      this.$store.dispatch('updateActivity', { activity: this.activity, restaurantBool: this.restaurantBool });
     },
     formatDate(date) {
       return utils.formatDate(date);
@@ -162,7 +172,11 @@ export default {
 </script>
 
 <style>
-.restaurant-table {
+.text-left {
   text-align: left;
+}
+
+.restaurant-option {
+  display: flex;
 }
 </style>
