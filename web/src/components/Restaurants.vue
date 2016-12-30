@@ -21,7 +21,6 @@
         <md-button class="md-primary" @click="closeModal('restaurantModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
-<<<<<<< c1e4a8cc4ab57041a4d3d7b0135884f625407bf2:web/src/components/Restaurants.vue
     <!-- ##dialog end -->
     <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
     <md-layout md-flex-small="80" md-flex-medium="80" md-flex-large="80" md-flex-xlarge="60" class="content" v-if="!isLoading">
@@ -31,29 +30,6 @@
           <span class="md-title-gutter"></span>
           <md-button class="md-icon-button md-raised md-accent" id="custom" @click="openModal('restaurantModal')">
             <md-icon>add</md-icon>
-=======
-    <md-whiteframe md-elevation="2">
-      <md-toolbar>
-        <h1 class="md-title">Restaurants</h1>
-        <md-button class="text-right md-raised md-button" @click="openModal('restaurantModal')">
-          <md-icon>add</md-icon> <span>New Restaurant</span>
-        </md-button>
-      </md-toolbar>
-      <md-list>
-        <md-list-item v-for="(row, rowIndex) in restaurants" class="restaurant-item">
-          <div class="image-placeholder" @click="info(row)">
-            <div class="lorem-image" v-bind:style="'background-image: url(\'http://lorempixel.com/128/128/food?'+rowIndex+'\')'"></div>
-          </div>
-          <div class="md-list-text-container" @click="info(row)">
-            <span>{{row.name}}</span>
-            <span>{{row.phone || '%phone number%'}}</span>
-          </div>
-          <md-button class="md-icon-button md-list-action" @click="openEditModal('restaurantModal',rowIndex)">
-            <md-icon>create</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-list-action" >
-            <md-icon>schedule</md-icon>
->>>>>>> Add sign up form and stlying buttons:web/src/components/Restaurant.vue
           </md-button>
         </md-toolbar>
         <md-list>
