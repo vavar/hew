@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 
 /* global console */
 /* eslint no-console: ["error", { allow: ["warn", "error","log"] }] */
+// const BASE_URL = 'http://localhost:8080';
 const BASE_URL = 'http://hew.abct.io';
 const RESTAURANTS_URL = `${BASE_URL}/api/restaurants`;
 const ACTIVITIES_URL = `${BASE_URL}/api/activities`;
