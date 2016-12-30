@@ -5,15 +5,15 @@
         <md-icon>home</md-icon> <router-link to="/"><span>Home</span></router-link>
       </md-list-item>
 
-      <md-list-item>
+      <md-list-item v-if="$auth.check()">
         <md-icon>local_dining</md-icon> <router-link to="/order"><span>Make an order</span></router-link>
       </md-list-item>
 
-      <md-list-item>
+      <md-list-item v-if="$auth.check()">
         <md-icon>restaurant</md-icon> <router-link to="/restaurants"><span>Restaurants</span></router-link>
       </md-list-item>
 
-      <md-list-item v-if="isAdmin">
+      <md-list-item v-if="$auth.check('admin')">
         <md-icon>build</md-icon> <span>Admin Tools</span>
         <md-list-expand>
           <md-list>

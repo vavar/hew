@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="$auth.ready()">
     <navbar></navbar>
     <div class="wrapper">
       <transition name="md-router" appear>
@@ -7,6 +7,7 @@
       </transition>
     </div>
   </div>
+  <div id="loading" v-else>loading</div>
 </template>
 
 <script>

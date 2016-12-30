@@ -3,22 +3,23 @@
     <md-card>
       <md-card-content>
         <h2>Login</h2>
+        <div v-show="error" style="color:red; word-wrap:break-word;">{{ error }}</div>
         <p v-if="$route.query.redirect">
           You need to login first.
         </p>
-        <form novalidate @submit.prevent="login">
+        <form @submit.prevent="login">
           <p v-if="error" class="error">Bad login information</p>
           <md-input-container>
             <label>Email</label>
-            <md-input required v-model="email" placeholder="email"></md-input>
+            <md-input name="username" required v-model="data.body.username" placeholder="email"></md-input>
           </md-input-container>
           <md-input-container class="md-input-invalid">
             <label>Password</label>
-            <md-input required v-model="pass" placeholder="password" type="password"></md-input>
-            <span class="md-error">Hint: pass</span>
+            <md-input name="password" required v-model="data.body.password" placeholder="password" type="password"></md-input>
+            <span class="md-error">Hint: 1234</span>
           </md-input-container>
           <md-button class="md-primary md-raised" type="submit">log in</md-button>
-          <router-link tag="md-button" class="md-primary md-raised" to="/signup">sign up</router-link>
+          <router-link tag="md-button" class="md-primary md-raised" to="/register">sign up</router-link>
         </form>
       </md-card-content>
     </md-card>  
@@ -26,26 +27,33 @@
 </template>
 
 <script>
-import auth from '../auth';
 
 export default {
   data() {
     return {
-      email: 'joe@example.com',
-      pass: '',
-      error: false,
+      data: {
+        body: {
+          username: '',
+          password: '',
+        },
+      },
+      error: null,
     };
   },
   methods: {
     login() {
-      auth.login(this.email, this.pass, (loggedIn) => {
-        if (!loggedIn) {
-          this.error = true;
-        } else {
-          this.$router.replace(this.$route.query.redirect || '/');
+      this.$auth.login({
+        body: this.data.body,
+        redirect: {name: 'home'},
+        success() {
+          console.log('success'+this.data.body);
+          alert('success');
+        },
+        error(res) {
+          this.error = res.data;
         }
       });
-    },
+    }
   },
 };
 </script>

@@ -81,28 +81,28 @@ func main() {
 	}
 
 	router.POST("/login", authMiddleware.LoginHandler)
-	auth := router.Group("/auth")
-	auth.Use(authMiddleware.MiddlewareFunc())
-	{
-		auth.GET("/hello", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"text": "Hello World.",
-			})
-		})
-		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
-	}
-
-	api := router.Group("/api")
-	api.GET("/auth/login", authMiddleware.LoginHandler)
-	api.POST("/auth/login", authMiddleware.LoginHandler)
-	api.POST("/auth/refresh_token", authMiddleware.LoginHandler)
 
 	var userService = NewUserService(db)
+
+	auth := router.Group("/auth")
+	auth.GET("/hello", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"text": "Hello World.",
+		})
+	})
+	auth.GET("/token", authMiddleware.RefreshHandler)
+	auth.GET("/login", authMiddleware.LoginHandler)
+	auth.POST("/login", authMiddleware.LoginHandler)
+	auth.POST("/register", userService.RegisterUser)
+	auth.GET("/user", userService.GetUserDetails)
+
+	api := router.Group("/api")
 	api.GET("/users", userService.ListUsers)
 	api.POST("/users", userService.AddUser)
 	api.GET("/users/:id", userService.GetByID)
 	api.PUT("/users", userService.UpdateUser)
-	api.POST("/auth/register", userService.RegisterUser)
+
+	//cross endpoint
 
 	var organizationService = NewOrganizationService(db)
 	api.GET("/organizations", organizationService.ListOrganizations)

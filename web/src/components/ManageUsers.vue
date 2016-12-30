@@ -1,26 +1,27 @@
 <template>
-  <md-layout md-gutter>
+  <md-layout md-gutter v-if="$auth.ready() && loaded">
     <!-- ##dialog start -->
-    <md-dialog md-open-from="#fab" md-close-to="#fab" ref="restaurantModal">
+    <md-dialog md-open-from="#fab" md-close-to="#fab" ref="userModal">
       <md-dialog-title>{{dialog.header}}</md-dialog-title>
       <md-dialog-content>
         <form>
-          <md-input-container>
-            <label>Name</label>
-            <md-input required v-model="restaurant.name" placeholder="Restaurant Name"></md-input>
+          <md-input-container hidden>
+            <label>Email</label>
+            <md-input required v-model="user.email" placeholder="email"></md-input>
           </md-input-container>
           <md-input-container>
-            <label>Phone Number</label>
-            <md-input v-model="restaurant.phone" placeholder="Phone Number"></md-input>
+            <label>Username</label>
+            <md-input v-model="user.email" placeholder="username"></md-input>
           </md-input-container>
         </form>
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="addOrUpdateRestaurant('restaurantModal')">{{dialog.action}}</md-button>
-        <md-button class="md-primary" @click="closeModal('restaurantModal')">Cancel</md-button>
+        <md-button class="md-primary" @click="addOrUpdateRestaurant('userModal')">{{dialog.action}}</md-button>
+        <md-button class="md-primary" @click="closeModal('userModal')">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
+
     <!-- ##dialog end -->
     <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
     <md-layout md-flex-small="80" md-flex-medium="80" md-flex-large="80" md-flex-xlarge="60" class="content" v-if="!isLoading">
