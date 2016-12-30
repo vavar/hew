@@ -81,21 +81,20 @@ func main() {
 	}
 
 	router.POST("/login", authMiddleware.LoginHandler)
+
 	var userService = NewUserService(db)
+
 	auth := router.Group("/auth")
-	auth.Use(authMiddleware.MiddlewareFunc())
-	{
-		auth.GET("/hello", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"text": "Hello World.",
-			})
+	auth.GET("/hello", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"text": "Hello World.",
 		})
-		auth.GET("/token", authMiddleware.RefreshHandler)
-		auth.GET("/login", authMiddleware.LoginHandler)
-		auth.POST("/login", authMiddleware.LoginHandler)
-		auth.POST("/register", userService.RegisterUser)
-		auth.GET("/user", userService.GetUserDetails)
-	}
+	})
+	auth.GET("/token", authMiddleware.RefreshHandler)
+	auth.GET("/login", authMiddleware.LoginHandler)
+	auth.POST("/login", authMiddleware.LoginHandler)
+	auth.POST("/register", userService.RegisterUser)
+	auth.GET("/user", userService.GetUserDetails)
 
 	api := router.Group("/api")
 	api.GET("/users", userService.ListUsers)
