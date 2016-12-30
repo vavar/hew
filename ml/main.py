@@ -119,6 +119,7 @@ def get_rating():
     session = Session()
     avg_ratings = session.query(
         Rating.menu_id,
+        func.count(Rating.menu_id).label('count'),
         func.avg(Rating.portion_size).label('portion_size'),
         func.avg(Rating.healthiness).label('healthiness'),
         func.avg(Rating.sweetness).label('sweetness'),
@@ -137,7 +138,11 @@ def _serialize_ratings_row(row):
     Converts the namedtuple-like row that sqlalchemy returns into a dict that resembles the object used to create
     a rating.
     """
-    return {'menu_id': row.menu_id, 'ratings': {key: getattr(row, key) for key in row._fields if key != 'menu_id'}}
+    return {
+        'menu_id': row.menu_id,
+        'count': row.count,
+        'ratings': {key: getattr(row, key) for key in row._fields if key not in ('menu_id', 'count')}
+    }
 
 
 # http://flask.pocoo.org/docs/0.12/server/#in-code
