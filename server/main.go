@@ -96,13 +96,13 @@ func main() {
 	api.GET("/auth/login", authMiddleware.LoginHandler)
 	api.POST("/auth/login", authMiddleware.LoginHandler)
 	api.POST("/auth/refresh_token", authMiddleware.LoginHandler)
-	api.POST("/auth/register", userService.RegisterUser)
 
 	var userService = NewUserService(db)
 	api.GET("/users", userService.ListUsers)
 	api.POST("/users", userService.AddUser)
 	api.GET("/users/:id", userService.GetByID)
 	api.PUT("/users", userService.UpdateUser)
+	api.POST("/auth/register", userService.RegisterUser)
 
 	var organizationService = NewOrganizationService(db)
 	api.GET("/organizations", organizationService.ListOrganizations)
