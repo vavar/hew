@@ -12,6 +12,7 @@ import App from './App';
 import Home from './components/Home';
 import Login from './components/Login';
 import Order from './components/Order';
+import AddOrder from './components/AddOrder';
 import Restaurants from './components/Restaurants';
 import ManageEvents from './components/ManageEvents';
 import RestaurantMenu from './components/RestaurantMenu';
@@ -20,6 +21,9 @@ import Signup from './components/Signup';
 Vue.use(VueMaterial);
 Vue.use(VueResource);
 Vue.use(VeeValidate);
+Vue.use(VueRouter);
+
+Vue.component('add-order',AddOrder);
 
 Vue.material.registerTheme('default', {
   primary: 'blue',
@@ -27,7 +31,6 @@ Vue.material.registerTheme('default', {
   warn: 'red',
   background: 'white',
 });
-Vue.use(VueRouter);
 
 function requireAuth(to, from, next) {
   if (!auth.loggedIn()) {
