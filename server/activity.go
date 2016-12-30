@@ -110,6 +110,7 @@ func (service *ActivityService) AddRestaurant(c *gin.Context) {
 	c.JSON(http.StatusOK, activity)
 }
 
+//RemoveRestaurant - Remove a restaurant from an activity
 func (service *ActivityService) RemoveRestaurant(c *gin.Context) {
 	var params AddRestaurantParams
 	if err := c.BindJSON(&params); err != nil {
