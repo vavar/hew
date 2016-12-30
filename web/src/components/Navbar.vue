@@ -12,7 +12,7 @@
       </h2>
       <div class="text-right">
         <label>{{ $auth.user().email }}</label>
-        <router-link tag="md-button" v-if="$auth.ready() && loaded" v-on:click="$auth.logout()" class="md-raised md-accent">Log out</router-link>
+        <router-link tag="md-button" v-if="$auth.ready()" v-on:click="$auth.logout()" class="md-raised md-accent">Log out</router-link>
         <router-link tag="md-button" v-if="!$auth.check()" to="/login" class="md-raised md-warn">Sign in</router-link>
       </div>
     </md-toolbar>
@@ -55,6 +55,16 @@
       gotoHome() {
         this.$router.push({ path: '/' });
       },
+      onLogout() {
+        this.$auth.logout({
+        makeRequest: true,
+        params: {},
+        success: function () {},
+        error: function () {},
+        redirect: '/login',
+        // etc...
+    });
+      }
     },
     components: {
       Navlist,
