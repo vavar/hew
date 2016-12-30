@@ -127,9 +127,6 @@
       closeModal(ref) {
         this.$refs[ref].close();
       },
-      addMenu() {
-
-      },
       onSort() {
 
       },

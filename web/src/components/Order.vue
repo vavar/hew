@@ -1,24 +1,26 @@
 <template>
   <div class="full-width">
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="menuModal">
-      <md-dialog-title>Add {{ restaurant.name }}'s menu</md-dialog-title>
+      <md-dialog-title>Add {{ restaurantName }}'s menu</md-dialog-title>
       <md-dialog-content class="add-order-dialog">
-        <form>
+        <form v-on:submit.prevent="addMenu">
           <md-input-container>
             <label>Menu</label>
             <md-select
               placeholder="Name"
-              :name="'name'"
-              v-model="menu.name">
-              <md-option v-for="(value, rowIndex) in menu" :key="rowIndex" value={value.name}>{{ value.name }} ( {{ value.price }} baht )</md-option>
+              name="name"
+              v-model="newMenu.name">
+              <md-subheader>Select Menu</md-subheader>
+              <md-option v-for="(value, rowIndex) in menu" :key="rowIndex" :value="value.name">{{ value.name }} ( {{ value.price }} baht )</md-option>
             </md-select>
           </md-input-container>
           <md-input-container>
             <label>Quantity</label>
             <md-select
               placeholder="Quantity"
-              v-model="menu.quantity">
-              <md-option v-for="(value, rowIndex) in 10" :key="rowIndex" value={value}>{{ value }}</md-option>
+              name="quantity"
+              v-model="newMenu.quantity">
+              <md-option v-for="(n, rowIndex) in 10" :key="rowIndex" :value="n">{{ n }}</md-option>
             </md-select>
           </md-input-container>
         </form>
@@ -52,8 +54,8 @@
               {{ column }}
             </md-table-cell>
             <md-table-cell>
-              <md-button class="md-icon-button">
-                <md-icon>delete</md-icon>
+              <md-button v-if="loggedIn" class="md-icon-button">
+                <md-icon v-on:click="removeUser(menu)">delete</md-icon>
               </md-button>
             </md-table-cell>
           </md-table-row>
@@ -80,9 +82,12 @@ export default {
   props: ['restaurant','orders'],
   data: () => ({
     loggedIn: auth.loggedIn(),
-    loading: false,
-    post: null,
-    error: null,
+    newMenu: {
+      user: 'ton',
+      name: '',
+      price: '100',
+      quantity: '',
+    },
     menu: [
       {
         user: 'ton',
@@ -112,23 +117,23 @@ export default {
   },
   methods: {
     fetchData() {
-      this.error = this.post = null;
-      this.loading = true;
-      // replace getPost with your data fetching util / API wrapper
-      // getPost(this.$route.params.id, (err, post) => {
-      //   this.loading = false;
-      //   if (err) {
-      //     this.error = err.toString();
-      //   } else {
-      //     this.post = post;
-      //   }
-      // });
     },
     openModal(ref) {
       this.$refs[ref].open();
     },
     closeModal(ref) {
       this.$refs[ref].close();
+    },
+    addMenu(ref) {
+      console.log(this.newMenu);
+      this.menu.push(this.newMenu);
+      this.$refs[ref].close();
+      this.newMenu.name = '';
+      this.newMenu.price = '';
+      this.newMenu.quantity = '';
+    },
+    removeMenu() {
+      this.child(this.menu['.key']).remove();
     },
     onSort() {
 
