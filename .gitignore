@@ -14,3 +14,4 @@ gin-bin
 ###########
 *.pyc
 ml/ratings.db
+ml/q_data.csv
