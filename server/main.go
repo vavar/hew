@@ -32,8 +32,11 @@ func main() {
 
 	var db = InitDBConnection()
 
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AddAllowMethods("DELETE")
+
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(cors.New(corsConfig))
 
 	// the jwt middleware
 	authMiddleware := &jwt.GinJWTMiddleware{
@@ -119,6 +122,7 @@ func main() {
 	api.POST("/activities", activityService.CreateActivity)
 	api.PUT("/activities", activityService.UpdateActivity)
 	api.POST("/activities/restaurants", activityService.AddRestaurant)
+	api.DELETE("/activities/restaurants", activityService.RemoveRestaurant)
 
 	api.GET("/orders/:userID", activityService.ListOrderItems)
 	api.POST("/orders", activityService.CreateOrderItem)

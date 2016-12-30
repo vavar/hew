@@ -245,6 +245,19 @@ func (database *Database) AddActivityRestaurant(activity *Activity, id int) erro
 	return nil
 }
 
+//DeleteActivityRestaurant - Delete a row from table activities_restaurants
+func (database *Database) DeleteActivityRestaurant(activity *Activity, restaurantID int) error {
+	var restaurant Restaurant
+	if notFound := database.FindRestaurantByID(&restaurant, restaurantID); notFound != nil {
+		return notFound
+	}
+	if err := database.DB.Model(activity).Association("Restaurants").Delete(restaurant).Error; err != nil {
+		return fmt.Errorf("Failed to remove the relation between the activity %d and the restaurant %d: %s", activity.ID, restaurantID, err)
+	}
+	database.FindActivityByID(activity, activity.ID)
+	return nil
+}
+
 //ListOrderItems - List all order items made by a user
 func (database *Database) ListOrderItems(items *[]OrderItem, userID int) error {
 	if err := database.DB.Where(&OrderItem{UserID: userID}).Find(items).Error; err != nil {
