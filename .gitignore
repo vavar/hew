@@ -13,5 +13,5 @@ gin-bin
 # For python ML microservice
 ###########
 *.pyc
-ml/ratings.db
-ml/q_data.csv
+recommendations/ratings.db
+recommendations/q_data.csv
