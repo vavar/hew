@@ -35,6 +35,7 @@ func (service *ActivityService) ListActivities(c *gin.Context) {
 	var params ListActivitiesParams
 	if err := c.Bind(&params); err != nil {
 		errorJSON(c, http.StatusBadRequest, err)
+		return
 	}
 
 	var activities []Activity
@@ -103,8 +104,30 @@ func (service *ActivityService) AddRestaurant(c *gin.Context) {
 		return
 	}
 	if linkErr := service.DB.AddActivityRestaurant(&activity, params.RestaurantID); linkErr != nil {
-
+		errorJSON(c, http.StatusInternalServerError, linkErr)
+		return
 	}
+	c.JSON(http.StatusOK, activity)
+}
+
+func (service *ActivityService) RemoveRestaurant(c *gin.Context) {
+	var params AddRestaurantParams
+	if err := c.BindJSON(&params); err != nil {
+		errorJSON(c, http.StatusBadRequest, err)
+		return
+	}
+
+	var activity Activity
+	if findErr := service.DB.FindActivityByID(&activity, params.ActivityID); findErr != nil {
+		errorJSON(c, http.StatusInternalServerError, findErr)
+		return
+	}
+
+	if deleteErr := service.DB.DeleteActivityRestaurant(&activity, params.RestaurantID); deleteErr != nil {
+		errorJSON(c, http.StatusInternalServerError, deleteErr)
+		return
+	}
+
 	c.JSON(http.StatusOK, activity)
 }
 
