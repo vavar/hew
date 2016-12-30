@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
+	"./jwt"
 	"github.com/spf13/viper"
 	cors "gopkg.in/gin-contrib/cors.v1"
 	"gopkg.in/gin-gonic/gin.v1"
@@ -36,7 +38,63 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.New(corsConfig))
 
+	// the jwt middleware
+	authMiddleware := &jwt.GinJWTMiddleware{
+		Realm:      "Hew Platform zone",
+		Key:        []byte("secret key"),
+		Timeout:    time.Hour,
+		MaxRefresh: time.Hour * 24,
+		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
+			var user User
+			if err := db.FindUserByEmail(&user, username); err != nil {
+				return username, false
+			}
+
+			if user.Password != password {
+				return username, false
+			}
+			return username, true
+		},
+		Authorizator: func(username string, c *gin.Context) bool {
+			if err := db.FindUserByEmail(&User{}, username); err != nil {
+				return false
+			}
+			return true
+		},
+		Unauthorized: func(c *gin.Context, code int, message string) {
+			c.JSON(code, gin.H{
+				"code":    code,
+				"message": message,
+			})
+		},
+		// TokenLookup is a string in the form of "<source>:<name>" that is used
+		// to extract token from the request.
+		// Optional. Default value "header:Authorization".
+		// Possible values:
+		// - "header:<name>"
+		// - "query:<name>"
+		// - "cookie:<name>"
+		TokenLookup: "header:Authorization",
+		// TokenLookup: "query:token",
+		// TokenLookup: "cookie:token",
+	}
+
+	router.POST("/login", authMiddleware.LoginHandler)
+	auth := router.Group("/auth")
+	auth.Use(authMiddleware.MiddlewareFunc())
+	{
+		auth.GET("/hello", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"text": "Hello World.",
+			})
+		})
+		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
+	}
+
 	api := router.Group("/api")
+	api.GET("/auth/login", authMiddleware.LoginHandler)
+	api.POST("/auth/login", authMiddleware.LoginHandler)
+	api.POST("/auth/refresh_token", authMiddleware.LoginHandler)
 
 	var userService = NewUserService(db)
 	api.GET("/users", userService.ListUsers)

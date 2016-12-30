@@ -75,6 +75,19 @@ func (database *Database) FindUserByID(user *User, id int) error {
 	return nil
 }
 
+//FindUserByEmail - Get a user with the given Email
+func (database *Database) FindUserByEmail(user *User, email string) error {
+	err := database.DB.Preload("OrderItems").
+		Where("email = ?", email).
+		First(user).Error
+
+	if err != nil {
+		return fmt.Errorf("Failed to get a user with e-mail = %s: %s", email, err)
+	}
+
+	return nil
+}
+
 //ListOrganizations - List all organizations
 func (database *Database) ListOrganizations(organizations *[]Organization) error {
 	err := database.DB.Preload("Users").
