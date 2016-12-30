@@ -30,7 +30,6 @@ function fetchActivities(state, context) {
     })
     .then((response) => {
       state.closedActivities = response.body;
-      console.log(`done !`);
       context.store.commit('loadingState', { isLoading: false });
     });
 }
@@ -79,6 +78,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isLoading: false,
+    user: {},
     restaurantMap: {},
     restaurants: [],
     openActivities: [],

@@ -56,6 +56,33 @@ func (service *UserService) AddUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+//RegisterUser - create new user into System
+func (service *UserService) RegisterUser(c *gin.Context) {
+	var json User
+
+	if err := c.BindJSON(&json); err != nil {
+		errorJSON(c, http.StatusBadRequest, err)
+		return
+	}
+
+	//TODO: removing hardcode
+	json.OrganizationID = 1
+
+	if err := service.DB.Create(&json); err != nil {
+		errorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	var user User
+	if err := service.DB.FindUserByID(&user, json.ID); err != nil {
+		errorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+
+}
+
 //ListUsers - list users in System
 func (service *UserService) ListUsers(c *gin.Context) {
 	var users []User

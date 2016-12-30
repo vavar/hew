@@ -34,6 +34,7 @@ func main() {
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AddAllowMethods("DELETE")
+	corsConfig.AllowAllOrigins = true
 
 	router := gin.Default()
 	router.Use(cors.New(corsConfig))
@@ -41,7 +42,7 @@ func main() {
 	// the jwt middleware
 	authMiddleware := &jwt.GinJWTMiddleware{
 		Realm:      "Hew Platform zone",
-		Key:        []byte("secret key"),
+		Key:        []byte("Hew leaw tae mai ru ja gin arai"),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour * 24,
 		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
@@ -101,6 +102,7 @@ func main() {
 	api.POST("/users", userService.AddUser)
 	api.GET("/users/:id", userService.GetByID)
 	api.PUT("/users", userService.UpdateUser)
+	api.POST("/auth/register", userService.RegisterUser)
 
 	var organizationService = NewOrganizationService(db)
 	api.GET("/organizations", organizationService.ListOrganizations)
