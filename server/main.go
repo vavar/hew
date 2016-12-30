@@ -41,19 +41,22 @@ func main() {
 		Key:        []byte("secret key"),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour * 24,
-		Authenticator: func(userId string, password string, c *gin.Context) (string, bool) {
-			if (userId == "admin" && password == "admin") || (userId == "test" && password == "test") {
-				return userId, true
+		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
+			var user User
+			if err := db.FindUserByEmail(&user, username); err != nil {
+				return username, false
 			}
 
-			return userId, false
+			if user.Password != password {
+				return username, false
+			}
+			return username, true
 		},
-		Authorizator: func(userId string, c *gin.Context) bool {
-			if userId == "admin" {
-				return true
+		Authorizator: func(username string, c *gin.Context) bool {
+			if err := db.FindUserByEmail(&User{}, username); err != nil {
+				return false
 			}
-
-			return false
+			return true
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			c.JSON(code, gin.H{
@@ -86,6 +89,10 @@ func main() {
 	}
 
 	api := router.Group("/api")
+
+	api.POST("/auth/login", authMiddleware.LoginHandler)
+	api.POST("/auth/refresh_token", authMiddleware.LoginHandler)
+
 	var userService = NewUserService(db)
 	api.GET("/users", userService.ListUsers)
 	api.POST("/users", userService.AddUser)
