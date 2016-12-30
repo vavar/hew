@@ -89,7 +89,7 @@ func main() {
 	}
 
 	api := router.Group("/api")
-
+	api.GET("/auth/login", authMiddleware.LoginHandler)
 	api.POST("/auth/login", authMiddleware.LoginHandler)
 	api.POST("/auth/refresh_token", authMiddleware.LoginHandler)
 
