@@ -14,8 +14,13 @@
             <md-input required type="date" v-model="date"></md-input>
             <md-input required type="time" v-model="time"></md-input>
           </md-input-container>
+          <md-input-container>
+            <label>Restaurants</label>
+            <md-select v-model="selectedRestaurants" multiple>
+              <md-option v-for="(restaurant, index) in restaurants" :value="restaurant.id">{{restaurant.name}}</md-option>
+            </md-select>
+          </md-input-container>
         </form>
-      </md-dialog-content>
 
       <md-dialog-actions>
         <md-button class="md-primary" @click="updateActivity('activityModal')">{{dialog.action}}</md-button>
@@ -45,7 +50,7 @@
             <md-table-cell>{{row.name}}</md-table-cell>
             <md-table-cell>{{formatDate(row.closed_at)}}</md-table-cell>
             <md-table-cell>
-              <md-button class="md-icon-button" @click="openEditModal('activityModal', rowIndex)">
+              <md-button class="md-icon-button" @click="openEditModal('activityModal', row)">
                 <md-icon>edit</md-icon>
               </md-button>
             </md-table-cell>
@@ -71,8 +76,6 @@
           <md-table-row v-for="(row, rowIndex) in closedActivities" :key="rowIndex" :md-item="row" md-auto-select>
             <md-table-cell>{{row.name}}</md-table-cell>
             <md-table-cell>{{formatDate(row.closed_at)}}</md-table-cell>
-            <md-table-cell>
-            </md-table-cell>
           </md-table-row>
         </md-table-body>
       </md-table>
@@ -90,6 +93,7 @@ export default {
     date: '',
     time: '',
     activity: { id: '', name: '', closed_at: '', organization_id: 1 },
+    selectedRestaurants: [],
   }),
   computed: {
     isLoading() {
@@ -100,10 +104,14 @@ export default {
     },
     closedActivities() {
       return this.$store.state.closedActivities;
-    }
+    },
+    restaurants() {
+      return this.$store.state.restaurants;
+    },
   },
   created() {
     this.$store.dispatch('getActivities', this.activity.organization_id);
+    this.$store.dispatch('getRestaurants');
   },
   methods: {
     openModal(ref) {
@@ -114,11 +122,19 @@ export default {
       this.activity.name = '';
       this.date = localTime[0];
       this.time = localTime[1];
+      this.selectedRestaurants = [];
       this.$refs[ref].open();
     },
-    openEditModal(ref, rowIndex) {
-      const activity = this.openActivities[rowIndex];
+    openEditModal(ref, row) {
+      const activity = row;
       const time = utils.formatDateForAPI(activity.closed_at).replace('Z', '').split('T');
+
+      if (row.restaurants) {
+        this.selectedRestaurants = row.restaurants.map(restaurant => restaurant.id);
+      } else {
+        this.selectedRestaurants = [];
+      }
+
       this.dialog.header = 'Update event';
       this.dialog.action = 'Update';
       this.activity.id = activity.id;
@@ -131,9 +147,12 @@ export default {
       this.$refs[ref].close();
     },
     updateActivity(ref) {
+      if (this.activity.name === '' || this.date === '' || this.time === '') {
+        return;
+      }
       this.activity.closed_at = utils.formatDateForAPI(`${this.date} ${this.time}`, true);
       this.$refs[ref].close();
-      this.$store.dispatch('updateActivity', this.activity);
+      this.$store.dispatch('updateActivity', { activity: this.activity, selectedRestaurants: this.selectedRestaurants });
     },
     formatDate(date) {
       return utils.formatDate(date);
@@ -141,3 +160,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.restaurant-table {
+  text-align: left;
+}
+</style>

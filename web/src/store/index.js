@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
+import Promise from 'bluebird';
 
 /* global console */
 /* eslint no-console: ["error", { allow: ["warn", "error","log"] }] */
@@ -44,6 +44,34 @@ function fetchRestaurantInfo(state, context) {
     state.activeRestaurant = rest;
     context.store.commit('loadingState', { isLoading: false });
   });
+}
+
+function updateRestaurantsInActivity(activity, selectedRestaurants) {
+  const url = `${ACTIVITIES_URL}/restaurants`;
+
+  return Promise.coroutine(function* () {
+    for (let i = 0; i < selectedRestaurants.length; i += 1) {
+      let restaurantId = selectedRestaurants[i];
+      if (!activity.restaurants.some(restaurant => restaurant.id === restaurantId)) {
+        yield Vue.http.post(url, {
+          activity_id: activity.id,
+          restaurant_id: restaurantId,
+        });
+      }
+    }
+
+    for (let i = 0; i < activity.restaurants.length; i += 1) {
+      let restaurant = activity.restaurants[i];
+      if (!selectedRestaurants.some(restaurantId => restaurantId === restaurant.id)) {
+        yield Vue.http.delete(url, {
+          body : {
+            activity_id: activity.id,
+            restaurant_id: restaurant.id,
+          }
+        });
+      }
+    }
+  })();
 }
 
 Vue.use(Vuex);
@@ -120,15 +148,23 @@ export default new Vuex.Store({
         });
       }
     },
-    updateActivity(context, activity) {
+    updateActivity(context, { activity, selectedRestaurants }) {
       if (activity.id) {
-        Vue.http.put(ACTIVITIES_URL, activity).then(() => {
-          context.commit('fetchActivities', { store: context, organizationId: activity.organization_id });
-        });
+        Vue.http.put(ACTIVITIES_URL, activity)
+          .then((response) => {
+            return updateRestaurantsInActivity(response.body, selectedRestaurants);
+          })
+          .then(() => {
+            context.commit('fetchActivities', { store: context, organizationId: activity.organization_id });
+          });
       } else {
-        Vue.http.post(ACTIVITIES_URL, activity).then(() => {
-          context.commit('fetchActivities', { store: context, organizationId: activity.organization_id });
-        });
+        Vue.http.post(ACTIVITIES_URL, activity)
+          .then((response) => {
+            return updateRestaurantsInActivity(response.body, selectedRestaurants);
+          })
+          .then(() => {
+            context.commit('fetchActivities', { store: context, organizationId: activity.organization_id });
+          });
       }
     },
     addUser(context, user) {
