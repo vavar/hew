@@ -2,11 +2,12 @@ package jwt
 
 import (
 	"errors"
-	"gopkg.in/gin-gonic/gin.v1"
-	"gopkg.in/dgrijalva/jwt-go.v3"
 	"net/http"
 	"strings"
 	"time"
+
+	"gopkg.in/dgrijalva/jwt-go.v3"
+	"gopkg.in/gin-gonic/gin.v1"
 )
 
 // GinJWTMiddleware provides a Json-Web-Token authentication implementation. On failure, a 401 HTTP response
@@ -43,6 +44,8 @@ type GinJWTMiddleware struct {
 	// only after an authentication success. Must return true on success, false on failure.
 	// Optional, default to success.
 	Authorizator func(userID string, c *gin.Context) bool
+
+	Authorized func(c *gin.Context, login *Login, token string, expire string)
 
 	// Callback function that will be called during login.
 	// Using this function it is possible to add additional payload data to the webtoken.
@@ -200,11 +203,7 @@ func (mw *GinJWTMiddleware) LoginHandler(c *gin.Context) {
 		mw.unauthorized(c, http.StatusUnauthorized, "Create JWT Token faild")
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"token":  tokenString,
-		"expire": expire.Format(time.RFC3339),
-	})
+	mw.Authorized(c, &loginVals, tokenString, expire.Format(time.RFC3339))
 }
 
 // RefreshHandler can be used to refresh a token. The token still needs to be valid on refresh.

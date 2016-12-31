@@ -4,12 +4,13 @@ import Promise from 'bluebird';
 
 /* global console */
 /* eslint no-console: ["error", { allow: ["warn", "error","log"] }] */
-// const BASE_URL = 'http://localhost:8080';
-const BASE_URL = 'http://hew.abct.io';
+const BASE_URL = 'http://localhost:8080';
+// const BASE_URL = 'http://hew.abct.io';
 const RESTAURANTS_URL = `${BASE_URL}/api/restaurants`;
 const ACTIVITIES_URL = `${BASE_URL}/api/activities`;
 const MENU_URL = `${BASE_URL}/api/menus`;
 const USER_URL = `${BASE_URL}/api/users`;
+const ORDER_URL = `${BASE_URL}/api/orders`;
 
 function fetchRestaurants(state, context) {
   Vue.http.get(RESTAURANTS_URL).then((response) => {
@@ -21,8 +22,17 @@ function fetchRestaurants(state, context) {
   });
 }
 
+function fetchUsers(state, context) {
+  // context.commit('loadingState', { isLoading: false });
+  Vue.http.get(USER_URL).then((response) => {
+    state.users = response.body;
+    state.users.forEach((rest) => {
+      state.userMap[rest.id] = rest;
+    });
+  });
+}
+
 function fetchActivities(state, context) {
-  console.log(`fetchActivities !`);
   Vue.http.get(`${ACTIVITIES_URL}?org=${context.organizationId}&status=open`)
     .then((response) => {
       state.openActivities = response.body;
@@ -90,6 +100,8 @@ export default new Vuex.Store({
     isLoading: false,
     user: {},
     restaurantMap: {},
+    users:[],
+    userMap: {},
     restaurants: [],
     openActivities: [],
     closedActivities: [],
@@ -101,12 +113,16 @@ export default new Vuex.Store({
     },
     restaurantByID(state, id) {
       return state.restaurantMap[id];
+    },
+    userByID(state, id ) {
+      return state.userMap[id];
     }
   },
   mutations: {
     fetchRestaurants,
     fetchRestaurantInfo,
     fetchActivities,
+    fetchUsers,
     loadingState(state, { isLoading }) {
       state.isLoading = isLoading
     },
@@ -128,6 +144,15 @@ export default new Vuex.Store({
       }
       commit('loadingState', { isLoading: true });
       commit('fetchRestaurantInfo', {store:context, id});
+    },
+    getHomeActivities(context, organizationId) {
+      context.commit('loadingState', { isLoading: true });
+      context.commit('fetchUsers', { store: context, organizationId});
+      context.commit('fetchActivities', { store: context, organizationId });
+    },
+    getUsers(context, organizationId) {
+      context.commit('loadingState', { isLoading: true });
+      context.commit('fetchUsers', { store: context, organizationId });
     },
     getActivities(context, organizationId) {
       context.commit('loadingState', { isLoading: true });
@@ -180,5 +205,10 @@ export default new Vuex.Store({
     addUser(context, user) {
       Vue.http.post(USER_URL, user).then(() => {});
     },
+    addOrder(context, order) {
+      Vue.http.post(ORDER_URL, order).then(()=>{
+        context.commit('fetchActivities', { store: context, organizationId:1 });
+      });
+    }
   },
 });

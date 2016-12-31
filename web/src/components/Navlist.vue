@@ -6,10 +6,6 @@
       </md-list-item>
 
       <md-list-item v-if="$auth.check()">
-        <md-icon>local_dining</md-icon> <router-link to="/order"><span>Make an order</span></router-link>
-      </md-list-item>
-
-      <md-list-item v-if="$auth.check()">
         <md-icon>restaurant</md-icon> <router-link to="/restaurants"><span>Restaurants</span></router-link>
       </md-list-item>
 
@@ -33,14 +29,12 @@
 </template>
 
 <script>
-  import auth from '../auth';
-
   export default {
     name: 'navlist',
     methods: {},
     computed: {
       isAdmin() {
-        return auth.isAdmin();
+        return true;
       },
     },
     components: {},

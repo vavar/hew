@@ -1,30 +1,29 @@
 <template>
   <div class="full-width">
-    <add-order :restaurant="restaurant"></add-order>
       <md-toolbar>
         <h2 class="md-title md-left-align">Order List</h2>
-        <md-button v-if="$auth.ready()" class="md-raised md-button md-warn" id="addMenu" @click="openModal('menuModal')">
-          <md-icon>add</md-icon><span> Add order</span>
-        </md-button>
+        <add-order v-if="$auth.check()" :restaurant="restaurant" :activityID="activityID"></add-order>
       </md-toolbar>
       <md-table md-sort="restaurant" md-sort-type="desc" @sort="onSort">
         <md-table-header>
           <md-table-row>
             <md-table-head md-sort-by="user">User</md-table-head>
             <md-table-head md-sort-by="restaurant">Menu</md-table-head>
-            <md-table-head md-sort-by="price" md-numeric>price</md-table-head>
-            <md-table-head md-sort-by="quantity" md-numeric>quantity</md-table-head>
-            <md-table-head>action</md-table-head>
+            <md-table-head v-if="$auth.check()">action</md-table-head>
           </md-table-row>
         </md-table-header>
-
         <md-table-body>
-          <md-table-row v-for="(row, rowIndex) in restaurant.menus" :key="rowIndex" :md-item="row" md-auto-select>
-            <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex" :md-numeric="columnIndex !== 'user' && columnIndex !== 'name'">
-              {{ column }}
+          <md-table-row v-for="(row, rowIndex) in restaurant.orders" :key="rowIndex" :md-item="row" md-auto-select>
+            <md-table-cell>
+              <div class="md-title md-row" >
+              <div>{{ lazyUserInfo(row.user_id) }}</div>
+              </div>
             </md-table-cell>
             <md-table-cell>
-              <md-button v-if="loggedIn" class="md-icon-button">
+              <div>{{row.menu}}</div>
+            </md-table-cell>
+            <md-table-cell v-if="$auth.check()">
+              <md-button class="md-icon-button" v-if="isOwnerOrder(row.user_id)">
                 <md-icon v-on:click="removeUser(menu)">delete</md-icon>
               </md-button>
             </md-table-cell>
@@ -45,44 +44,26 @@
 </template>
 
 <script>
-import auth from '../auth';
 import AddOrder from './AddOrder';
+
 export default {
   name: 'order',
-  props: ['restaurant','orders'],
+  props: ['restaurant','activityID'],
   components: {
       AddOrder,
   },
   data: () => ({
-    loggedIn: auth.loggedIn(),
     newMenu: {
       user: 'ton',
       name: '',
       price: '100',
       quantity: '',
     },
-    menu: [
-      {
-        user: 'ton',
-        name: 'Frozen yogurt',
-        price: '159',
-        quantity: '1',
-      },
-      {
-        user: 'ken',
-        name: 'Fried rice',
-        price: '200',
-        quantity: '2',
-      },
-    ],
   }),
   created() {
     // fetch the data when the view is created and the data is
     // already being observed
     this.fetchData();
-    auth.onChange = (loggedIn) => {
-      this.loggedIn = loggedIn;
-    };
   },
   watch: {
     // call again the method if the route changes
@@ -91,25 +72,18 @@ export default {
   methods: {
     fetchData() {
     },
-    openModal(ref) {
-      this.$refs[ref].open();
-    },
-    closeModal(ref) {
-      this.$refs[ref].close();
-    },
-    addMenu(ref) {
-      console.log(this.newMenu);
-      this.menu.push(this.newMenu);
-      this.$refs[ref].close();
-      this.newMenu.name = '';
-      this.newMenu.price = '';
-      this.newMenu.quantity = '';
-    },
     removeMenu() {
       this.child(this.menu['.key']).remove();
     },
+    isOwnerOrder(id){
+      return id === this.$auth.user().id;
+    },
     onSort() {
 
+    },
+    lazyUserInfo( userID ) {
+      const users = this.$store.state.users.filter( user=> user.id === userID);
+      return users.length > 0 ? users[0].username : "";
     },
     onPagination() {
 

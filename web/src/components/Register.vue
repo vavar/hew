@@ -22,12 +22,11 @@
           <md-button class="md-primary md-raised" type="submit">Submit</md-button>
         </form>
       </md-card-content>
-    </md-card>  
+    </md-card>
   </div>
 </template>
 
 <script>
-import auth from '../auth';
 
 export default {
   data() {
@@ -42,7 +41,7 @@ export default {
         },
       error: null,
       }
-    };  
+    };
   },
   methods: {
     register() {

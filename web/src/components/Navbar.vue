@@ -5,15 +5,23 @@
         <md-icon>menu</md-icon>
       </md-button>
       <h2 class="md-title" @click="gotoHome()">
-          <md-avatar>
-            <img src="../assets/logo.png" />
-          </md-avatar>
-          <span>Hew</span>
+        <md-avatar>
+          <img src="../assets/logo.png" />
+        </md-avatar>
+        <span>Hew</span>
       </h2>
-      <div class="text-right">
-        <label>{{ $auth.user().email }}</label>
-        <router-link tag="md-button" v-if="$auth.ready()" v-on:click="$auth.logout()" class="md-raised md-accent">Log out</router-link>
-        <router-link tag="md-button" v-if="!$auth.check()" to="/login" class="md-raised md-warn">Sign in</router-link>
+      <span class="md-title-gutter"></span>
+      <div v-if="$auth.check()" class="profile-panel">
+        <md-avatar>
+          <img src="http://lorempixel.com/128/128/people">
+        </md-avatar>
+        <ul>
+          <li><span>{{$auth.user().email}}</span></li>
+          <li><a @click="onLogout()" class="md-raised md-accent">Log out</a></li>
+        </ul>
+      </div>
+      <div v-else>
+        <md-button @click="toLogin()" class="md-raised md-warn">Sign in</md-button>
       </div>
     </md-toolbar>
 
@@ -30,19 +38,15 @@
 
 <script>
   import Navlist from './Navlist';
-  import auth from '../auth';
 
   export default {
     name: 'navbar',
     data() {
       return {
-        loggedIn: auth.loggedIn(),
+        loggedIn: true,
       };
     },
     created() {
-      auth.onChange = (loggedIn) => {
-        this.loggedIn = loggedIn;
-      };
     },
     methods: {
       toggleLeftSidenav() {
@@ -55,15 +59,17 @@
       gotoHome() {
         this.$router.push({ path: '/' });
       },
+      toLogin() {
+        this.$router.push({ path: '/login' });
+      },
       onLogout() {
         this.$auth.logout({
-        makeRequest: true,
-        params: {},
-        success: function () {},
-        error: function () {},
-        redirect: '/login',
-        // etc...
-    });
+          makeRequest: true,
+          params: {},
+          success: function () { },
+          error: function () { },
+          redirect: '/login',
+        });
       }
     },
     components: {
@@ -73,6 +79,25 @@
 </script>
 
 <style>
+  .profile-panel {
+    width: 140px;
+  }
+  .profile-panel .md-avatar {
+    float:left;
+    margin-right: 10px;
+  }
+  .profile-panel a {
+    cursor: pointer;
+  }
+  .profile-panel ul {
+    list-style: none;
+    margin:0px;
+    padding:0px;
+    margin-left: 10px;
+  }
+  .profile-panel li {
+    text-align: left;
+  }
   .text-right {
     position: absolute;
     right: 8px;

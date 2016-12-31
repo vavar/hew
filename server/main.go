@@ -5,6 +5,10 @@ import (
 	"os"
 	"time"
 
+	"log"
+
+	"net/http"
+
 	"./jwt"
 	"github.com/spf13/viper"
 	cors "gopkg.in/gin-contrib/cors.v1"
@@ -48,10 +52,12 @@ func main() {
 		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
 			var user User
 			if err := db.FindUserByEmail(&user, username); err != nil {
+				log.Printf("cannot find user by email : %s , %s", username, err)
 				return username, false
 			}
 
 			if user.Password != password {
+				log.Printf("password does not matched")
 				return username, false
 			}
 			return username, true
@@ -63,9 +69,29 @@ func main() {
 			return true
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
-			c.JSON(code, gin.H{
-				"code":    code,
-				"message": message,
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status": "error",
+				"error":  "invalid.credentials",
+				"msg":    "Invalid Credentials",
+			})
+		},
+		Authorized: func(c *gin.Context, login *jwt.Login, token string, expire string) {
+			log.Printf("Authorized -------- 1")
+			var user User
+			if db.FindUserByEmail(&user, login.Username) != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"status": "error",
+					"error":  "query Failed",
+					"msg":    "query Failed",
+				})
+				return
+			}
+			log.Printf("Authorized -------- 2")
+			c.Writer.Header().Set("token", token)
+			c.Writer.Header().Set("Authorization", token)
+			c.JSON(http.StatusOK, gin.H{
+				"status": "success",
+				"data":   user,
 			})
 		},
 		// TokenLookup is a string in the form of "<source>:<name>" that is used
@@ -85,14 +111,15 @@ func main() {
 	var userService = NewUserService(db)
 
 	auth := router.Group("/auth")
-	auth.GET("/hello", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"text": "Hello World.",
-		})
-	})
 	auth.GET("/token", authMiddleware.RefreshHandler)
 	auth.GET("/login", authMiddleware.LoginHandler)
 	auth.POST("/login", authMiddleware.LoginHandler)
+	auth.POST("/logout", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"status": "success",
+			"msg":    "Logged out Successfully.",
+		})
+	})
 	auth.POST("/register", userService.RegisterUser)
 	auth.GET("/user", userService.GetUserDetails)
 
@@ -101,7 +128,6 @@ func main() {
 	api.POST("/users", userService.AddUser)
 	api.GET("/users/:id", userService.GetByID)
 	api.PUT("/users", userService.UpdateUser)
-
 	//cross endpoint
 
 	var organizationService = NewOrganizationService(db)
@@ -125,8 +151,10 @@ func main() {
 	api.PUT("/activities", activityService.UpdateActivity)
 	api.POST("/activities/restaurants", activityService.AddRestaurant)
 	api.DELETE("/activities/restaurants", activityService.RemoveRestaurant)
+	api.GET("/home", activityService.getOpenOrganizationActivities)
 
-	api.GET("/orders/:userID", activityService.ListOrderItems)
+	api.GET("/users/:id/orders", activityService.ListOrderItems)
+	api.GET("/orders/info/:id", activityService.GetOrderInfo)
 	api.POST("/orders", activityService.CreateOrderItem)
 	api.PUT("/orders", activityService.UpdateOrderItem)
 

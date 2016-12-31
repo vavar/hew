@@ -52,9 +52,7 @@ func (database *Database) Update(object interface{}) error {
 
 //ListUsers - List all users
 func (database *Database) ListUsers(users *[]User) error {
-	err := database.DB.Preload("OrderItems").
-		Find(users).Error
-
+	err := database.DB.Debug().Select("id, username, email,organization_id").Find(users).Error
 	if err != nil {
 		return fmt.Errorf("Failed to select all users: %s", err)
 	}
@@ -77,11 +75,9 @@ func (database *Database) FindUserByID(user *User, id int) error {
 
 //FindUserByEmail - Get a user with the given Email
 func (database *Database) FindUserByEmail(user *User, email string) error {
-	err := database.DB.Preload("OrderItems").
-		Where("email = ?", email).
-		First(user).Error
-
+	err := database.DB.Where("email = ?", email).First(user).Error
 	if err != nil {
+		log.Fatalf("Failed to get a user with ID = %s: %s", email, err)
 		return fmt.Errorf("Failed to get a user with e-mail = %s: %s", email, err)
 	}
 
@@ -260,7 +256,9 @@ func (database *Database) DeleteActivityRestaurant(activity *Activity, restauran
 
 //ListOrderItems - List all order items made by a user
 func (database *Database) ListOrderItems(items *[]OrderItem, userID int) error {
-	if err := database.DB.Where(&OrderItem{UserID: userID}).Find(items).Error; err != nil {
+	var user = &User{}
+	user.ID = userID
+	if err := database.DB.Debug().Model(&user).Related(items).Error; err != nil {
 		return fmt.Errorf("Failed to select all order items ")
 	}
 	return nil
@@ -268,7 +266,7 @@ func (database *Database) ListOrderItems(items *[]OrderItem, userID int) error {
 
 //FindOrderItemByID - Get an order item with the given ID
 func (database *Database) FindOrderItemByID(item *OrderItem, id int) error {
-	if err := database.DB.Where("id = ?", id).First(item, id).Error; err != nil {
+	if err := database.DB.First(item, id).Error; err != nil {
 		return fmt.Errorf("Failed to get an order item with ID = %d: %s", id, err)
 	}
 	return nil

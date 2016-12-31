@@ -12,8 +12,8 @@
         </md-toolbar>
         <md-table-card>
           <md-tabs class="md-transparent activity-tabs">
-            <md-tab v-bind:md-label="res.name" v-for="(res,index) in act.restaurants" class="restaurant-tab">
-              <order :restaurant="res"></order>
+            <md-tab v-bind:md-label="res.name" v-for="(res,index) in restaurantList(act)" class="restaurant-tab">
+              <order :restaurant="res" :activityID="act.id"></order>
             </md-tab>
           </md-tabs>
         </md-table-card>
@@ -25,24 +25,12 @@
 
 <script>
   import Order from './Order';
+  import _ from 'lodash';
 
   export default {
     name: 'home',
     data() {
       return {
-        // activities: [
-        //   {
-        //     name: 'Monday Lunch',
-        //     restaurants: [
-        //       { id: 1, name: 'ครัวคุณวี', menus: [{ id: 1, name: 'ข้าวกระเพราไก่', price: 80 }] },
-        //       { id: 2, name: 'DJ Poom', menus: [{ id: 1, name: 'ข้าวกระเพราไก่', price: 80 }] },
-        //     ],
-        //   },
-        //   {
-        //     name: 'Tuesday Lunch',
-        //     restaurants: [{ id: 1, name: 'ครัวคุณวี' }, { id: 2, name: 'DJ Poom' }],
-        //   },
-        // ],
       };
     },
     computed: {
@@ -55,7 +43,40 @@
     },
     methods: {
       fetchData() {
-        this.$store.dispatch('getActivities',1);
+        this.$store.dispatch('getHomeActivities', 1);
+      },
+
+      restaurantList(activity) {
+        if (!activity || !activity.restaurants) {
+          return;
+        }
+        return _.reduce(activity.restaurants, (restaurants, restaurant) => {
+          const menus = restaurant.menus;
+
+          // if ( !activity.order_items ) {
+          restaurant.orders = (!activity.order_items) ? [] : _.reduce(activity.order_items, (_orders, order) => {
+            menus.forEach((menu) => {
+              if (menu.id === order.menu_id) {
+                _orders.push({ user_id: order.user_id, menu: menu.name });
+              }
+            })
+            return _orders;
+          }, []);
+          restaurants.push(restaurant);
+          return restaurants;
+          // }
+
+          // restaurant.orders = _.reduce(activity.order_items, (_orders, order) => {
+          //   menus.forEach((menu) => {
+          //     if (menu.id === order.menu_id) {
+          //       _orders.push({ user_id: order.user_id, menu: menu.name });
+          //     }
+          //     return _orders;
+          //   })
+          // },[]);
+          // restaurants.push(restaurant);
+          // return restaurants;
+        }, []);
       },
     },
     created() {

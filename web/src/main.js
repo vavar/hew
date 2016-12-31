@@ -6,7 +6,6 @@ import VueMaterial from 'vue-material';
 import VueRouter from 'vue-router';
 import VeeValidate from 'vee-validate';
 
-import auth from './auth';
 import store from './store';
 import App from './App';
 import Home from './components/Home';
@@ -32,7 +31,8 @@ Vue.material.registerTheme('default', {
   background: 'white',
 });
 
-Vue.http.options.root = 'http://hew.abct.io';
+Vue.http.options.root = 'http://localhost:8080';
+//Vue.http.options.root = 'http://hew.abct.io';
 
 Vue.router = new VueRouter({
   // mode: 'history',
@@ -43,13 +43,8 @@ Vue.router = new VueRouter({
     { path: '/login', name: 'login', component: Login, meta: {auth: false} },
     { path: '/register', name: 'register', component: Register, meta: {auth: false} },
     { path: '/order', name:'order', component: Order, meta: {auth: true} },
-    { path: '/restaurants', name:'restaurants', component: Restaurants, meta: {auth: true}, 
-      children: [{
-          path: ':id',
-          name: 'restaurant-id',
-          component: RestaurantMenu,
-      }],
-    },
+    { path: '/restaurants', name:'restaurants', component: Restaurants, meta: {auth: true}},
+    { path: '/restaurants/:id', name:'restaurant-info', component: RestaurantMenu},
     { path: '/admin/events', component: ManageEvents, meta: {auth: 'admin'}, },
   ],
 });
@@ -59,6 +54,7 @@ Vue.use(require('@websanova/vue-auth'), {
     http: require('@websanova/vue-auth/drivers/http/vue-resource.1.x.js'),
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
     rolesVar: 'role',
+    loginData: {fetchUser:false},
 });
 
 /* eslint-disable no-new */

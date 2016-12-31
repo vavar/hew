@@ -100,7 +100,7 @@
         this.$store.dispatch('addOrUpdateRestaurant', this.restaurant);
       },
       info(row) {
-        const path = `/restaurant/${row.id}`;
+        const path = `/restaurants/${row.id}`;
         this.$router.push({ path });
       },
       closeModal(ref) {

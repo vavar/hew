@@ -4,6 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"log"
+
+	"fmt"
+
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
@@ -134,7 +138,7 @@ func (service *ActivityService) RemoveRestaurant(c *gin.Context) {
 
 //ListOrderItems - list order item
 func (service *ActivityService) ListOrderItems(c *gin.Context) {
-	userID, err := strconv.Atoi(c.Param("userID"))
+	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
 		return
@@ -149,10 +153,28 @@ func (service *ActivityService) ListOrderItems(c *gin.Context) {
 	c.JSON(http.StatusOK, orderItems)
 }
 
+//GetOrderInfo - get Order Info
+func (service *ActivityService) GetOrderInfo(c *gin.Context) {
+	orderID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		errorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	var orderItem OrderItem
+	if err := service.DB.FindOrderItemByID(&orderItem, orderID); err != nil {
+		errorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, orderItem)
+}
+
 //CreateOrderItem - create order item
 func (service *ActivityService) CreateOrderItem(c *gin.Context) {
 	var json OrderItem
 	if err := c.BindJSON(&json); err != nil {
+		log.Printf("CreateOrderItem :: BindJSON Failed : %s", err)
 		errorJSON(c, http.StatusBadRequest, err)
 		return
 	}
@@ -191,4 +213,20 @@ func (service *ActivityService) UpdateOrderItem(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, orderItem)
+}
+
+type ActivityViewModel struct {
+}
+
+func (service *ActivityService) getOpenOrganizationActivities(c *gin.Context) {
+	var activities []Activity
+	if service.DB.ListActivities(&activities, 1, "open") != nil {
+		errorJSON(c, http.StatusInternalServerError, fmt.Errorf("ListActivities - Failed"))
+		return
+	}
+	var users []User
+	if service.DB.ListUsers(&users) != nil {
+		errorJSON(c, http.StatusInternalServerError, fmt.Errorf("ListUsers - Failed"))
+		return
+	}
 }

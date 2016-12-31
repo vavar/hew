@@ -7,10 +7,10 @@ type User struct {
 	ID             int         `json:"id"              gorm:"primary_key;AUTO_INCREMENT"`
 	Username       string      `json:"username"        gorm:"type:varchar(200)"`
 	Email          string      `json:"email"           gorm:"type:varchar(200)"`
-	Password       string      `json:"password"        gorm:"type:varchar(100)"`
-	Role           string      `json:"role"            gorm:"type:varchar(20)"` // values: user, admin, system_admin
+	Password       string      `json:"password,omitempty"        gorm:"type:varchar(100)"`
+	Role           string      `json:"role,omitempty"            gorm:"type:varchar(20)"` // values: user, admin, system_admin
 	OrganizationID int         `json:"organization_id" `
-	OrderItems     []OrderItem `json:"order_items"`
+	OrderItems     []OrderItem `json:"order_items,omitempty" gorm:"ForeignKey:UserID"`
 }
 
 //Organization record

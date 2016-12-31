@@ -4,6 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"log"
+
+	"fmt"
+
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
@@ -118,17 +122,16 @@ func (service *UserService) UpdateUser(c *gin.Context) {
 
 //GetUserDetails - get user details
 func (service *UserService) GetUserDetails(c *gin.Context) {
-	var user User
-	if err := c.BindJSON(&user); err != nil {
-		errorJSON(c, http.StatusBadRequest, err)
+	user := &User{}
+	user.Email = "a@a.com"
+	if token := c.Request.Header.Get("authorization"); len(token) > 0 {
+		log.Printf("start Authorization ....  %s", token)
+	}
+	if service.DB.FindUserByEmail(user, "a@a.com") != nil {
+		log.Printf("error !!!")
+		errorJSON(c, http.StatusBadRequest, fmt.Errorf("error"))
 		return
 	}
-
-	if findErr := service.DB.DB.Select("id, username, email, organizationid, role").
-		Where("email =?", user.Email).
-		Find(&user).Error; findErr != nil {
-		errorJSON(c, http.StatusBadRequest, findErr)
-		return
-	}
-	c.JSON(http.StatusOK, user)
+	user.Role = "user"
+	c.JSON(http.StatusOK, gin.H{"status": "success", "data": user})
 }

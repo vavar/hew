@@ -22,7 +22,7 @@
           <router-link tag="md-button" class="md-primary md-raised" to="/register">sign up</router-link>
         </form>
       </md-card-content>
-    </md-card>  
+    </md-card>
   </div>
 </template>
 
@@ -45,9 +45,9 @@ export default {
       this.$auth.login({
         body: this.data.body,
         redirect: {name: 'home'},
-        success() {
-          console.log('success'+this.data.body);
-          alert('success');
+        success(res) {
+          const user = res.data.data;
+          this.$auth.user(user);
         },
         error(res) {
           this.error = res.data;
