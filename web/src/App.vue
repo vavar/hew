@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-if="$auth.ready()">
+  <div class="app-viewport" id="app" v-if="$auth.ready()">
     <navbar></navbar>
     <div class="wrapper">
       <transition name="md-router" appear>
@@ -22,7 +22,16 @@ export default {
 </script>
 
 <style>
-#app {
+html,
+body,
+.app-viewport {
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-viewport {
+  display: flex;
+  flex-flow: column;
 }
 .wrapper {
   margin-top: 20px;

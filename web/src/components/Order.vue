@@ -9,18 +9,20 @@
           <md-table-row>
             <md-table-head md-sort-by="user">User</md-table-head>
             <md-table-head md-sort-by="restaurant">Menu</md-table-head>
+            <md-table-head md-sort-by="restaurant">Price</md-table-head>
             <md-table-head v-if="$auth.check()">action</md-table-head>
           </md-table-row>
         </md-table-header>
         <md-table-body>
           <md-table-row v-for="(row, rowIndex) in restaurant.orders" :key="rowIndex" :md-item="row" md-auto-select>
             <md-table-cell>
-              <div class="md-title md-row" >
               <div>{{ lazyUserInfo(row.user_id) }}</div>
-              </div>
             </md-table-cell>
             <md-table-cell>
               <div>{{row.menu}}</div>
+            </md-table-cell>
+            <md-table-cell>
+              <div>{{row.price || '-'}}</div>
             </md-table-cell>
             <md-table-cell v-if="$auth.check()">
               <md-button class="md-icon-button" v-if="isOwnerOrder(row.user_id)">

@@ -58,6 +58,11 @@ module.exports = {
         include: projectRoot,
         exclude: /node_modules/
       },
+      { // for third-party minified scripts, don't process require()
+        test: /\.min\.js$/,
+        include: /node_modules/,
+        loader: 'script'
+      },
       {
         test: /\.json$/,
         loader: 'json'

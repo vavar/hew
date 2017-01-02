@@ -10,20 +10,7 @@
       </md-list-item>
 
       <md-list-item v-if="$auth.check('admin')">
-        <md-icon>build</md-icon> <span>Admin Tools</span>
-        <md-list-expand>
-          <md-list>
-            <md-list-item>
-              <span>Manage Restaurants</span>
-            </md-list-item>
-            <md-list-item>
-              <router-link to="/admin/events"><span>Manage Events</span></router-link>
-            </md-list-item>
-            <md-list-item>
-              <span>Order Reports</span>
-            </md-list-item>
-          </md-list>
-        </md-list-expand>
+        <md-icon>build</md-icon> <router-link to="/admin/events"><span>Manage Events</span></router-link>
       </md-list-item>
   </div>
 </template>

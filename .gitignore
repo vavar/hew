@@ -2,6 +2,7 @@
 .idea
 gin-bin
 
+/db/data
 ###########
 # GOLang Ignored
 ###########

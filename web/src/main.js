@@ -12,6 +12,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Order from './components/Order';
 import AddOrder from './components/AddOrder';
+import Countdown from './components/countdown/countdown';
 import Register from './components/Register';
 import Restaurants from './components/Restaurants';
 import ManageEvents from './components/ManageEvents';
@@ -23,6 +24,14 @@ Vue.use(VeeValidate);
 Vue.use(VueRouter);
 
 Vue.component('add-order',AddOrder);
+Vue.component('countdown',Countdown);
+Vue.filter('two_digits', function (value) {
+    if(value.toString().length <= 1)
+    {
+        return "0"+value.toString();
+    }
+    return value.toString();
+});
 
 Vue.material.registerTheme('default', {
   primary: 'blue',

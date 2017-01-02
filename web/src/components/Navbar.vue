@@ -80,11 +80,8 @@
 
 <style>
   .profile-panel {
-    width: 140px;
-  }
-  .profile-panel .md-avatar {
-    float:left;
-    margin-right: 10px;
+    display: flex;
+    flex-direction: row;
   }
   .profile-panel a {
     cursor: pointer;
