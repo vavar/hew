@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"log"
+
 	"gopkg.in/dgrijalva/jwt-go.v3"
 	"gopkg.in/gin-gonic/gin.v1"
 )
@@ -45,7 +47,7 @@ type GinJWTMiddleware struct {
 	// Optional, default to success.
 	Authorizator func(userID string, c *gin.Context) bool
 
-	Authorized func(c *gin.Context, login *Login, token string, expire string)
+	Authorized func(c *gin.Context, username string, token string, expire string)
 
 	// Callback function that will be called during login.
 	// Using this function it is possible to add additional payload data to the webtoken.
@@ -203,7 +205,7 @@ func (mw *GinJWTMiddleware) LoginHandler(c *gin.Context) {
 		mw.unauthorized(c, http.StatusUnauthorized, "Create JWT Token faild")
 		return
 	}
-	mw.Authorized(c, &loginVals, tokenString, expire.Format(time.RFC3339))
+	mw.Authorized(c, userID, tokenString, expire.Format(time.RFC3339))
 }
 
 // RefreshHandler can be used to refresh a token. The token still needs to be valid on refresh.
@@ -245,6 +247,23 @@ func (mw *GinJWTMiddleware) RefreshHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",
 	})
+}
+
+// UserHandler - handler ??
+func (mw *GinJWTMiddleware) UserHandler(c *gin.Context) {
+	token, _ := mw.parseToken(c)
+	claims := token.Claims.(jwt.MapClaims)
+	tokenString, err := token.SignedString(mw.Key)
+	username := claims["id"].(string)
+	exp := claims["exp"].(int64)
+	expire := time.Unix(exp, 0)
+
+	log.Printf(`User Handler > %s , %s `, username, expire.Format(time.RFC3339))
+	if err != nil {
+		mw.unauthorized(c, http.StatusUnauthorized, "Create JWT Token faild")
+		return
+	}
+	mw.Authorized(c, username, tokenString, expire.Format(time.RFC3339))
 }
 
 // ExtractClaims help to extract the JWT claims

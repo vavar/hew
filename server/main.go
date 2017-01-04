@@ -76,9 +76,9 @@ func main() {
 				"msg":    "Invalid Credentials",
 			})
 		},
-		Authorized: func(c *gin.Context, login *jwt.Login, token string, expire string) {
+		Authorized: func(c *gin.Context, username, token string, expire string) {
 			var user User
-			if db.FindUserByEmail(&user, login.Username) != nil {
+			if db.FindUserByEmail(&user, username) != nil {
 				c.JSON(http.StatusBadRequest, gin.H{
 					"status": "error",
 					"error":  "query Failed",
@@ -113,6 +113,7 @@ func main() {
 	auth.Use(authMiddleware.MiddlewareFunc())
 	auth.GET("/refresh", authMiddleware.RefreshHandler)
 	auth.GET("/login", authMiddleware.LoginHandler)
+	auth.GET("/user", authMiddleware.UserHandler)
 	auth.POST("/login", authMiddleware.LoginHandler)
 	auth.POST("/logout", func(c *gin.Context) {
 		c.JSON(200, gin.H{
