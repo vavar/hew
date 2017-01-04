@@ -26,7 +26,6 @@ html,
 body,
 .app-viewport {
   height: 100%;
-  overflow: hidden;
 }
 
 .app-viewport {

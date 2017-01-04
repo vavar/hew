@@ -48,6 +48,7 @@ export default {
       this.$auth.register({
         body: this.data.body,
         success: function () {
+          alert("success");
           this.$router.replace(this.$route.query.redirect || '/login');
         },
         error: function (res) {
