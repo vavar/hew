@@ -12,14 +12,14 @@
           <span class="gutter"></span>
           <countdown v-bind:expired="act.closed_at"></countdown>
           <div class="home-toolbar-menu">
-            <md-button-toggle class="md-primary" md-single>
+            <!--<md-button-toggle class="md-primary" md-single>
               <md-button class="md-icon-button md-toggle" @click="viewTable()">
                 <md-icon>view_module</md-icon>
               </md-button>
               <md-button class="md-icon-button" @click="viewList()">
                 <md-icon>view_list</md-icon>
               </md-button>
-            </md-button-toggle>
+            </md-button-toggle>-->
             <md-button v-if="$auth.check('admin')" @click="exportExcel(act)" class="md-icon-button">
               <md-icon>import_export</md-icon>
             </md-button>
