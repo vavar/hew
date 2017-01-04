@@ -12,7 +12,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Order from './components/Order';
 import AddOrder from './components/AddOrder';
-import Countdown from './components/countdown/countdown';
+import Countdown from './components/countdown/Countdown';
 import Register from './components/Register';
 import Restaurants from './components/Restaurants';
 import ManageEvents from './components/ManageEvents';
