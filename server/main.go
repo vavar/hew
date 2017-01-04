@@ -39,6 +39,7 @@ func main() {
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AddAllowMethods("DELETE")
 	corsConfig.AllowAllOrigins = true
+	corsConfig.AddAllowHeaders("*")
 
 	router := gin.Default()
 	router.Use(cors.New(corsConfig))
@@ -76,7 +77,6 @@ func main() {
 			})
 		},
 		Authorized: func(c *gin.Context, login *jwt.Login, token string, expire string) {
-			log.Printf("Authorized -------- 1")
 			var user User
 			if db.FindUserByEmail(&user, login.Username) != nil {
 				c.JSON(http.StatusBadRequest, gin.H{
@@ -86,7 +86,6 @@ func main() {
 				})
 				return
 			}
-			log.Printf("Authorized -------- 2")
 			c.Writer.Header().Set("token", token)
 			c.Writer.Header().Set("Authorization", token)
 			c.JSON(http.StatusOK, gin.H{

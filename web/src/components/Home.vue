@@ -25,37 +25,9 @@
             </md-button>
             <div>
         </md-toolbar>
-        <md-table-card>
-          <md-tabs class="md-transparent activity-tabs">
-            <md-tab v-bind:md-label="res.name" v-for="(res,index) in restaurantList(act)" class="restaurant-tab">
-              <order v-if="view==='table'" :restaurant="res" :activityID="act.id"></order>
-              <md-list v-else class="md-triple-line">
-                <md-list-item v-for="(menu,index) in menuOrderList(res)">
-                  <div class="md-list-text-container">
-                    <span>{{menu.name}}</span>
-                    <span>cost: {{menu.price}}</span>
-                    <div class="people-list">
-                      <div class="people-list-container">
-                        <div class="people-info" v-for="ppl in menu.orderBy">
-                          <div class="md-title">{{ppl}}</div>
-                          <md-button class="md-icon-button md-list-action">
-                            <md-icon>delete</md-icon>
-                          </md-button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <md-button class="md-icon-button md-list-action">
-                    <md-icon>star_border</md-icon>
-                  </md-button>
-                  <md-button class="md-icon-button md-list-action">
-                    <md-icon>plus_one</md-icon>
-                  </md-button>
-                </md-list-item>
-              </md-list>
-            </md-tab>
-          </md-tabs>
-        </md-table-card>
+        <md-card-content>
+          <order v-if="view==='table'" :activity="act" ></order>
+        </md-card-content>
       </md-card>
     </md-layout>
     <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
@@ -126,26 +98,6 @@
             return 0;
         });
         return menuOrderBy;
-      },
-      restaurantList(activity) {
-        if (!activity || !activity.restaurants) {
-          return;
-        }
-        return _.reduce(activity.restaurants, (restaurants, restaurant) => {
-          const menus = restaurant.menus;
-
-          // if ( !activity.order_items ) {
-          restaurant.orders = (!activity.order_items) ? [] : _.reduce(activity.order_items, (_orders, order) => {
-            menus.forEach((menu) => {
-              if (menu.id === order.menu_id) {
-                _orders.push({ user_id: order.user_id, menu: menu.name, price: menu.price });
-              }
-            })
-            return _orders;
-          }, []);
-          restaurants.push(restaurant);
-          return restaurants;
-        }, []);
       },
       lazyUserInfo(userID) {
         const users = this.$store.state.users.filter(user => user.id === userID);
