@@ -13,7 +13,7 @@
       <span class="md-title-gutter"></span>
       <div v-if="$auth.check()" class="profile-panel">
         <md-avatar>
-          <img src="http://lorempixel.com/128/128/people">
+          <img v-bind:src="gavatar()">
         </md-avatar>
         <ul>
           <li><span>{{$auth.user().email}}</span></li>
@@ -38,6 +38,7 @@
 
 <script>
   import Navlist from './Navlist';
+  import aCrypto from 'crypto';
 
   export default {
     name: 'navbar',
@@ -55,6 +56,14 @@
       open() {
       },
       close() {
+      },
+      gavatar() {
+        const email = this.$auth.user().email;
+        if (!email ) {
+          return 'http://lorempixel.com/128/128/people';
+        }
+        const md5string = aCrypto.createHash('md5').update(email.toLowerCase()).digest('hex')
+        return `https://s.gravatar.com/avatar/${md5string}?s=80`;
       },
       gotoHome() {
         this.$router.push({ path: '/' });
