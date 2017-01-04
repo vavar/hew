@@ -240,9 +240,10 @@ func (mw *GinJWTMiddleware) RefreshHandler(c *gin.Context) {
 		return
 	}
 
+	c.Writer.Header().Set("token", tokenString)
+	c.Writer.Header().Set("Authorization", tokenString)
 	c.JSON(http.StatusOK, gin.H{
-		"token":  tokenString,
-		"expire": expire.Format(time.RFC3339),
+		"status": "success",
 	})
 }
 
