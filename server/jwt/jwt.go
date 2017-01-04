@@ -124,6 +124,7 @@ func (mw *GinJWTMiddleware) MiddlewareInit() error {
 // MiddlewareFunc makes GinJWTMiddleware implement the Middleware interface.
 func (mw *GinJWTMiddleware) MiddlewareFunc() gin.HandlerFunc {
 	if err := mw.MiddlewareInit(); err != nil {
+		log.Printf("MiddlewareInit error ")
 		return func(c *gin.Context) {
 			mw.unauthorized(c, http.StatusInternalServerError, err.Error())
 			return
@@ -215,6 +216,7 @@ func (mw *GinJWTMiddleware) RefreshHandler(c *gin.Context) {
 	token, _ := mw.parseToken(c)
 	claims := token.Claims.(jwt.MapClaims)
 
+	log.Printf("claims >> %s", claims)
 	origIat := int64(claims["orig_iat"].(float64))
 
 	if origIat < time.Now().Add(-mw.MaxRefresh).Unix() {
@@ -301,7 +303,7 @@ func (mw *GinJWTMiddleware) TokenGenerator(userID string) string {
 
 func (mw *GinJWTMiddleware) jwtFromHeader(c *gin.Context, key string) (string, error) {
 	authHeader := c.Request.Header.Get(key)
-
+	log.Printf("authHeader >> %s", authHeader)
 	if authHeader == "" {
 		return "", errors.New("auth header empty")
 	}
@@ -316,7 +318,7 @@ func (mw *GinJWTMiddleware) jwtFromHeader(c *gin.Context, key string) (string, e
 
 func (mw *GinJWTMiddleware) jwtFromQuery(c *gin.Context, key string) (string, error) {
 	token := c.Query(key)
-
+	log.Printf("jwtFromQuery >> %s", token)
 	if token == "" {
 		return "", errors.New("Query token empty")
 	}
@@ -326,7 +328,7 @@ func (mw *GinJWTMiddleware) jwtFromQuery(c *gin.Context, key string) (string, er
 
 func (mw *GinJWTMiddleware) jwtFromCookie(c *gin.Context, key string) (string, error) {
 	cookie, _ := c.Cookie(key)
-
+	log.Printf("cookie >> %s", cookie)
 	if cookie == "" {
 		return "", errors.New("Cookie token empty")
 	}
@@ -339,6 +341,7 @@ func (mw *GinJWTMiddleware) parseToken(c *gin.Context) (*jwt.Token, error) {
 	var err error
 
 	parts := strings.Split(mw.TokenLookup, ":")
+
 	switch parts[0] {
 	case "header":
 		token, err = mw.jwtFromHeader(c, parts[1])
@@ -349,6 +352,7 @@ func (mw *GinJWTMiddleware) parseToken(c *gin.Context) (*jwt.Token, error) {
 	}
 
 	if err != nil {
+		log.Printf("claims >> %s", err)
 		return nil, err
 	}
 
