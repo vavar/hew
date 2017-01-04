@@ -23,14 +23,13 @@ Vue.use(VueResource);
 Vue.use(VeeValidate);
 Vue.use(VueRouter);
 
-Vue.component('add-order',AddOrder);
-Vue.component('countdown',Countdown);
+Vue.component('add-order', AddOrder);
+Vue.component('countdown', Countdown);
 Vue.filter('two_digits', function (value) {
-    if(value.toString().length <= 1)
-    {
-        return "0"+value.toString();
-    }
-    return value.toString();
+  if (value.toString().length <= 1) {
+    return "0" + value.toString();
+  }
+  return value.toString();
 });
 
 Vue.material.registerTheme('default', {
@@ -49,26 +48,29 @@ Vue.router = new VueRouter({
   // base: __dirname,
   routes: [
     { path: '/', name: 'home', component: Home },
-    { path: '/login', name: 'login', component: Login, meta: {auth: false} },
-    { path: '/register', name: 'register', component: Register, meta: {auth: false} },
-    { path: '/order', name:'order', component: Order, meta: {auth: true} },
-    { path: '/restaurants', name:'restaurants', component: Restaurants, meta: {auth: true}},
-    { path: '/restaurants/:id', name:'restaurant-info', component: RestaurantMenu},
-    { path: '/admin/events', component: ManageEvents, meta: {auth: 'admin'}, },
+    { path: '/login', name: 'login', component: Login, meta: { auth: false } },
+    { path: '/register', name: 'register', component: Register, meta: { auth: false } },
+    { path: '/order', name: 'order', component: Order, meta: { auth: true } },
+    { path: '/restaurants', name: 'restaurants', component: Restaurants, meta: { auth: true } },
+    { path: '/restaurants/:id', name: 'restaurant-info', component: RestaurantMenu },
+    { path: '/admin/events', component: ManageEvents, meta: { auth: 'admin' }, },
   ],
 });
 
 Vue.use(require('@websanova/vue-auth'), {
-    auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
-    http: require('@websanova/vue-auth/drivers/http/vue-resource.1.x.js'),
-    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
-    rolesVar: 'role',
-    loginData: {url: 'login', fetchUser:false},
+  auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
+  http: require('@websanova/vue-auth/drivers/http/vue-resource.1.x.js'),
+  router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
+  rolesVar: 'role',
+  loginData: { url: 'login', fetchUser: false },
+  refreshData: {
+    enabled: false // true by default.
+  },
 });
 
 /* eslint-disable no-new */
 new Vue({
-  router : Vue.router,
+  router: Vue.router,
   store,
   el: '#app',
   template: '<App/>',
