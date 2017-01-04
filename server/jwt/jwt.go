@@ -224,6 +224,8 @@ func (mw *GinJWTMiddleware) RefreshHandler(c *gin.Context) {
 		return
 	}
 
+	log.Printf("Token not expired")
+
 	// Create the token
 	newToken := jwt.New(jwt.GetSigningMethod(mw.SigningAlgorithm))
 	newClaims := newToken.Claims.(jwt.MapClaims)
@@ -240,10 +242,12 @@ func (mw *GinJWTMiddleware) RefreshHandler(c *gin.Context) {
 	tokenString, err := newToken.SignedString(mw.Key)
 
 	if err != nil {
+		log.Printf("Create JWT Token faild")
 		mw.unauthorized(c, http.StatusUnauthorized, "Create JWT Token faild")
 		return
 	}
 
+	log.Printf("Create JWT Token success")
 	c.Writer.Header().Set("token", tokenString)
 	c.Writer.Header().Set("Authorization", tokenString)
 	c.JSON(http.StatusOK, gin.H{
