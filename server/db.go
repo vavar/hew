@@ -77,7 +77,7 @@ func (database *Database) FindUserByID(user *User, id int) error {
 func (database *Database) FindUserByEmail(user *User, email string) error {
 	err := database.DB.Where("email = ?", email).First(user).Error
 	if err != nil {
-		log.Fatalf("Failed to get a user with ID = %s: %s", email, err)
+		log.Fatalf("Failed to get a user with e-mail = %s: %s", email, err)
 		return fmt.Errorf("Failed to get a user with e-mail = %s: %s", email, err)
 	}
 
