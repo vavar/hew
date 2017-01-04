@@ -69,16 +69,22 @@ func (service *UserService) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	//TODO: removing hardcode
-	json.OrganizationID = 1
-	json.Role = "user"
+	log.Printf("register user : %s", json)
 
-	if err := service.DB.Create(&json); err != nil {
+	//TODO: removing hardcode
+	var user User
+
+	user.Username = json.Username
+	user.Email = json.Email
+	user.Password = json.Password
+	user.OrganizationID = 1
+	user.Role = "user"
+
+	if err := service.DB.Create(&user); err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	var user User
 	if err := service.DB.FindUserByEmail(&user, json.Email); err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
 		return
