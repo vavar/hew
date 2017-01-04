@@ -122,7 +122,7 @@ func main() {
 		})
 	})
 	auth.POST("/register", userService.RegisterUser)
-	auth.GET("/user", userService.GetUserDetails)
+	// auth.GET("/user", userService.GetUserDetails)
 
 	api := router.Group("/api")
 	api.GET("/users", userService.ListUsers)
