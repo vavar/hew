@@ -58,7 +58,7 @@
         const order = {
           user_id: this.$auth.user().id,
           menu_id: +this.newMenu.id,
-          activity_id: +this.activityID,
+          activity_id: +this.activity.id,
         };
         this.$store.dispatch('addOrder', order);
         this.$refs[ref].close();
