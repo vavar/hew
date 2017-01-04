@@ -63,7 +63,7 @@ Vue.use(require('@websanova/vue-auth'), {
     http: require('@websanova/vue-auth/drivers/http/vue-resource.1.x.js'),
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
     rolesVar: 'role',
-    loginData: {fetchUser:false},
+    loginData: {url: 'login', fetchUser:false},
 });
 
 /* eslint-disable no-new */
