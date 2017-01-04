@@ -110,7 +110,7 @@ func main() {
 	var userService = NewUserService(db)
 
 	auth := router.Group("/auth")
-	auth.GET("/token", authMiddleware.RefreshHandler)
+	auth.GET("/refresh", authMiddleware.RefreshHandler)
 	auth.GET("/login", authMiddleware.LoginHandler)
 	auth.POST("/login", authMiddleware.LoginHandler)
 	auth.POST("/logout", func(c *gin.Context) {
