@@ -40,8 +40,8 @@ Vue.material.registerTheme('default', {
   background: 'white',
 });
 
-Vue.http.options.root = 'http://localhost:8080';
-//Vue.http.options.root = 'http://hew.abct.io';
+// Vue.http.options.root = 'http://localhost:8080';
+Vue.http.options.root = 'http://hew.abct.io';
 
 Vue.router = new VueRouter({
   // mode: 'history',
