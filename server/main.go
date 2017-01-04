@@ -110,7 +110,7 @@ func main() {
 	var userService = NewUserService(db)
 
 	auth := router.Group("/auth")
-	auth.Use(authMiddleware.MiddlewareFunc())
+	// auth.Use(authMiddleware.MiddlewareFunc())
 	auth.GET("/refresh", authMiddleware.RefreshHandler)
 	auth.GET("/login", authMiddleware.LoginHandler)
 	auth.GET("/user", authMiddleware.UserHandler)
