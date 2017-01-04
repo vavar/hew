@@ -79,7 +79,7 @@ func (service *UserService) RegisterUser(c *gin.Context) {
 	}
 
 	var user User
-	if err := service.DB.FindUserByID(&user, json.ID); err != nil {
+	if err := service.DB.FindUserByEmail(&user, json.Email); err != nil {
 		errorJSON(c, http.StatusInternalServerError, err)
 		return
 	}
