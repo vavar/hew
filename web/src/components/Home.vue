@@ -25,9 +25,25 @@
             </md-button>
             <div>
         </md-toolbar>
-        <md-card-content>
-          <order v-if="view==='table'" :activity="act" ></order>
-        </md-card-content>
+        <md-card-area class="activity-content">
+          <md-card>
+            <md-card-media-cover md-solid>
+              <md-card-media>
+                <div v-bind:style="getStyleImage(act.id)" class="image-box">
+              </md-card-media>
+              <md-card-area class="activity-card-image-header">
+                <md-card-header>
+                  <div class="md-title activity-restaurant-container">
+                    <div class="restaurant" v-for="(restaurant,index) in act.restaurants">
+                      <md-icon>restaurant</md-icon><div>{{restaurant.name}}</div>
+                    </div>
+                  </div>
+                </md-card-header>
+              </md-card-area>
+            </md-card-media-cover>
+          </md-card>
+          <order v-if="view==='table'" :activity="act"></order>
+        </md-card-area>
       </md-card>
     </md-layout>
     <md-layout md-flex-small="10" md-flex-medium="10" md-flex-large="10" md-flex-xlarge="20"></md-layout>
@@ -62,6 +78,9 @@
       fetchData() {
         this.$store.dispatch('getHomeActivities', 1);
       },
+      getStyleImage( id ) {
+        return `background-image:url('http://lorempixel.com/1240/960/food?${id}')`
+      },
       getClosedDate(closedDate) {
         try {
           const date = new Date(closedDate);
@@ -73,29 +92,29 @@
         return new Date().getTime();
       },
       menuOrderList(restaurant) {
-        const menuOrderBy = _.reduce(restaurant.menus,(menus,menu)=>{
-          const orderBy = _.reduce(restaurant.orders,(orders,order)=>{
-            if ( order.menu === menu.name) {
+        const menuOrderBy = _.reduce(restaurant.menus, (menus, menu) => {
+          const orderBy = _.reduce(restaurant.orders, (orders, order) => {
+            if (order.menu === menu.name) {
               orders.push(this.lazyUserInfo(order.user_id));
             }
             return orders;
-          },[]);
+          }, []);
           menu.orderBy = orderBy;
           menus.push(menu);
           return menus;
-        },[]);
+        }, []);
 
-        menuOrderBy.sort((a,b) => {
+        menuOrderBy.sort((a, b) => {
           const sa = a.orderBy.length;
           const sb = b.orderBy.length;
 
-           if (sa >= sb ) {
-              return -1;
-            }
-            if (sa < sb) {
-              return 1;
-            }
-            return 0;
+          if (sa >= sb) {
+            return -1;
+          }
+          if (sa < sb) {
+            return 1;
+          }
+          return 0;
         });
         return menuOrderBy;
       },
@@ -135,6 +154,42 @@
   min-width: 250px;
   font-size: 1.5em;
 }
+.image-box{
+  max-width:100%;
+  height: 180px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.activity-card-image-header {
+  background-color: transparent !important;
+}
+.activity-content {
+  padding-bottom: 20px;
+}
+.activity-restaurant-container {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.activity-card-image-header .md-card-header{
+  margin-bottom: 3px !important;
+  padding-bottom: 8px !important;
+  padding-right: 8px !important;
+}
+
+.activity-restaurant-container div.restaurant {
+  margin-left: 20px;
+  font-size: 18px;
+  border-radius: 6px;
+  padding: 4px;
+  display: flex;
+  flex-direction: row;
+  background-color: rgba(0, 0, 0, .4);
+}
+.activity-restaurant-container div.restaurant i {
+  margin-right: 6px;
+}
+
 .people-info {
   display: flex;
   flex-direction: row;
