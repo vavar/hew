@@ -11,6 +11,7 @@ import App from './App';
 import Home from './components/Home';
 import Login from './components/Login';
 import Order from './components/Order';
+import OrderHistory from './components/OrderHistory';
 import AddOrder from './components/AddOrder';
 import Countdown from './components/countdown/Countdown';
 import Register from './components/Register';
@@ -50,7 +51,7 @@ Vue.router = new VueRouter({
     { path: '/', name: 'home', component: Home },
     { path: '/login', name: 'login', component: Login, meta: { auth: false } },
     { path: '/register', name: 'register', component: Register, meta: { auth: false } },
-    { path: '/order', name: 'order', component: Order, meta: { auth: true } },
+    { path: '/history', name: 'history', component: OrderHistory, meta: { auth: true } },
     { path: '/restaurants', name: 'restaurants', component: Restaurants, meta: { auth: true } },
     { path: '/restaurants/:id', name: 'restaurant-info', component: RestaurantMenu },
     { path: '/admin/events', component: ManageEvents, meta: { auth: 'admin' }, },

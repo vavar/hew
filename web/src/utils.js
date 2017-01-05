@@ -11,6 +11,9 @@ export default {
   getLocalTime() {
     return moment().tz(TIMEZONE).format(GO_TIME_FORMAT);
   },
+  getNextDayTime(){
+    return moment().add(1, 'days').hours(10).minutes(30).seconds(0).tz(TIMEZONE).format(GO_TIME_FORMAT);
+  },
   formatDateForAPI(dateStr, utc) {
     if (utc) {
       return moment.utc(moment(dateStr).tz(TIMEZONE)).format(GO_TIME_FORMAT);

@@ -158,12 +158,12 @@
   display: flex;
   flex-direction: row;
 }
-</style>
-<style scoped>
 .activity-card {
   width: 100%;
   margin-bottom: 20px;
 }
+</style>
+<style scoped>
 .gutter {
   flex: 1;
 }

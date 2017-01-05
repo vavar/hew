@@ -22,6 +22,14 @@ function fetchRestaurants(state, context) {
   });
 }
 
+function fetchHistory(state,context) {
+  Vue.http.get(`${USER_URL}/${context.userId}/history`)
+    .then((response) => {
+      state.history = response.body;
+      context.store.commit('loadingState', { isLoading: false });
+    });
+}
+
 function fetchUsers(state, context) {
   // context.commit('loadingState', { isLoading: false });
   Vue.http.get(USER_URL).then((response) => {
@@ -106,6 +114,7 @@ export default new Vuex.Store({
     openActivities: [],
     closedActivities: [],
     activeRestaurant: {},
+    history: [],
   },
   getters: {
     isLoading(state) {
@@ -123,6 +132,7 @@ export default new Vuex.Store({
     fetchRestaurantInfo,
     fetchActivities,
     fetchUsers,
+    fetchHistory,
     loadingState(state, { isLoading }) {
       state.isLoading = isLoading
     },
@@ -149,6 +159,10 @@ export default new Vuex.Store({
       context.commit('loadingState', { isLoading: true });
       context.commit('fetchUsers', { store: context, organizationId});
       context.commit('fetchActivities', { store: context, organizationId });
+    },
+    getOrderHistory(context, userId) {
+      context.commit('loadingState', { isLoading: true });
+      context.commit('fetchHistory', { store: context, userId});
     },
     getUsers(context, organizationId) {
       context.commit('loadingState', { isLoading: true });
@@ -207,6 +221,11 @@ export default new Vuex.Store({
     },
     addOrder(context, order) {
       Vue.http.post(ORDER_URL, order).then(()=>{
+        context.commit('fetchActivities', { store: context, organizationId:1 });
+      });
+    },
+    deleteOrder(context, order) {
+      Vue.http.put(ORDER_URL, order).then(()=>{
         context.commit('fetchActivities', { store: context, organizationId:1 });
       });
     }

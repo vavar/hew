@@ -5,6 +5,10 @@
         <md-icon>home</md-icon> <router-link to="/"><span>Home</span></router-link>
       </md-list-item>
 
+      <md-list-item v-if="$auth.check('user')">
+        <md-icon>find_in_page</md-icon> <router-link to="/history"><span>Order History</span></router-link>
+      </md-list-item>
+
       <md-list-item v-if="$auth.check()">
         <md-icon>restaurant</md-icon> <router-link to="/restaurants"><span>Restaurants</span></router-link>
       </md-list-item>
