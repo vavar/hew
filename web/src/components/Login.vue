@@ -16,7 +16,6 @@
           <md-input-container class="md-input-invalid">
             <label>Password</label>
             <md-input name="password" required v-model="data.body.password" placeholder="password" type="password"></md-input>
-            <span class="md-error">Hint: 1234</span>
           </md-input-container>
           <md-button class="md-primary md-raised" type="submit">log in</md-button>
           <router-link tag="md-button" class="md-primary md-raised" to="/register">sign up</router-link>
