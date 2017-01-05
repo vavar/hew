@@ -59,3 +59,12 @@ type OrderItem struct {
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 }
+
+//OrderHistory View
+type OrderHistory struct {
+	MenuID       int     `json:"menu_id"`
+	MenuName     string  `json:"menu_name"`
+	MenuPrice    float32 `json:"menu_price"`
+	ActivityName string  `json:"activity_name"`
+	Username     string  `json:"username"`
+}

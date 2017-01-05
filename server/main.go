@@ -128,6 +128,7 @@ func main() {
 	api.GET("/users", userService.ListUsers)
 	api.POST("/users", userService.AddUser)
 	api.GET("/users/:id", userService.GetByID)
+	api.GET("/users/:id/history", userService.ListAllOrders)
 	api.PUT("/users", userService.UpdateUser)
 	//cross endpoint
 

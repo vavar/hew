@@ -271,3 +271,29 @@ func (database *Database) FindOrderItemByID(item *OrderItem, id int) error {
 	}
 	return nil
 }
+
+//FindOrderItemsByUserID
+func (database *Database) FindOrderItemsByUserID(items *[]OrderHistory, id int) error {
+	rows, err := database.DB.Debug().
+		Raw("select menus.id, menus.name, menus.price, activities.name, users.username "+
+			"from order_items,menus,users,activities "+
+			"where "+
+			"order_items.user_id = users.id "+
+			"AND order_items.menu_id = menus.id "+
+			"AND order_items.activity_id = activities.id "+
+			"AND order_items.user_id = ?", id).
+		Rows()
+	defer rows.Close()
+	for rows.Next() {
+
+		item := OrderHistory{}
+		rows.Scan(&item.MenuID,
+			&item.MenuName,
+			&item.MenuPrice,
+			&item.ActivityName,
+			&item.Username)
+		*items = append(*items, item)
+		log.Printf("found : %s ", item.MenuName)
+	}
+	return err
+}

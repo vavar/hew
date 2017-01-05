@@ -126,6 +126,19 @@ func (service *UserService) UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+//ListAllOrders - list all orders by user
+func (service *UserService) ListAllOrders(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		errorJSON(c, http.StatusInternalServerError, err)
+		return
+	}
+	log.Printf("user id = %d", id)
+	var orders []OrderHistory
+	service.DB.FindOrderItemsByUserID(&orders, id)
+	c.JSON(http.StatusOK, orders)
+}
+
 //GetUserDetails - get user details
 func (service *UserService) GetUserDetails(c *gin.Context) {
 	user := &User{}
