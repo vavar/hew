@@ -79,7 +79,7 @@
         this.$store.dispatch('getHomeActivities', 1);
       },
       getStyleImage( id ) {
-        return `background-image:url('http://lorempixel.com/1240/960/food?${id}')`
+        return `background-image:url('http://lorempixel.com/1100/480/food?${id}')`
       },
       getClosedDate(closedDate) {
         try {
