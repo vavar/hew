@@ -62,9 +62,10 @@ type OrderItem struct {
 
 //OrderHistory View
 type OrderHistory struct {
-	MenuID       int     `json:"menu_id"`
-	MenuName     string  `json:"menu_name"`
-	MenuPrice    float32 `json:"menu_price"`
-	ActivityName string  `json:"activity_name"`
-	Username     string  `json:"username"`
+	MenuID       int       `json:"menu_id"`
+	MenuName     string    `json:"menu_name"`
+	MenuPrice    float32   `json:"menu_price"`
+	ActivityName string    `json:"activity_name"`
+	Username     string    `json:"username"`
+	Date         time.Time `json:"order_date"`
 }
