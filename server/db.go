@@ -274,7 +274,7 @@ func (database *Database) FindOrderItemByID(item *OrderItem, id int) error {
 
 //FindOrderItemsByUserID
 func (database *Database) FindOrderItemsByUserID(items *[]OrderHistory, id int) error {
-	rows, err := database.DB.Debug().
+	rows, err := database.DB.
 		Raw("select menus.id, menus.name, menus.price, activities.name, users.username, order_items.created_at "+
 			"from order_items,menus,users,activities "+
 			"where "+
@@ -294,7 +294,6 @@ func (database *Database) FindOrderItemsByUserID(items *[]OrderHistory, id int) 
 			&item.Username,
 			&item.Date)
 		*items = append(*items, item)
-		log.Printf("found : %s ", item.MenuName)
 	}
 	return err
 }
