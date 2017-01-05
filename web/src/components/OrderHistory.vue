@@ -28,7 +28,7 @@
               </md-table-header>
 
               <md-table-body>
-                <md-table-row v-for="item in history" :key="index">
+                <md-table-row v-for="item in history">
                   <md-table-cell>{{item.activity_name}}</md-table-cell>
                   <md-table-cell>{{item.menu_name}}</md-table-cell>
                   <md-table-cell md-numeric>{{item.menu_price}}</md-table-cell>
