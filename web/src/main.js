@@ -64,7 +64,8 @@ Vue.use(require('@websanova/vue-auth'), {
   rolesVar: 'role',
   loginData: { url: 'login', fetchUser: false },
   refreshData: {
-    enabled: false // true by default.
+    atInit: false,
+    enabled: false, // true by default.
   },
 });
 
