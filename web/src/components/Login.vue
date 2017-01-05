@@ -13,7 +13,7 @@
             <label>Email</label>
             <md-input name="username" required v-model="data.body.username" placeholder="email"></md-input>
           </md-input-container>
-          <md-input-container class="md-input-invalid">
+          <md-input-container>
             <label>Password</label>
             <md-input name="password" required v-model="data.body.password" placeholder="password" type="password"></md-input>
           </md-input-container>
