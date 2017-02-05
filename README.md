@@ -1,15 +1,18 @@
-# hew
-hew platform
+# Hew Platform
+Event Meal Ordering
 
-# Install Backends
-```bash
-$ ./setup.sh
-```
+# Prerequisite
+* Docker
 
-# Install Web application
+# Development
 
-```bash
-$ cd web
-$ npm install
-$ npm run dev
-```
+```docker-compose up```
+
+- Web UI - ```http://localhost:8080```
+- API Server - ```http://localhost:8081```
+- Database - ```localhost:5432```
+
+# Technology
+- Golang
+- Vuejs
+- PostgreSQL
