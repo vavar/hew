@@ -20,7 +20,7 @@
                 <md-icon>view_list</md-icon>
               </md-button>
             </md-button-toggle>-->
-            <md-button v-if="$auth.check('admin')" @click="exportExcel(act)" class="md-icon-button">
+            <md-button @click="exportExcel(act)" class="md-icon-button">
               <md-icon>import_export</md-icon>
             </md-button>
             <div>

@@ -1,5 +1,5 @@
 <template>
-  <md-layout md-gutter v-if="$auth.ready() && loaded">
+  <md-layout md-gutter>
     <!-- ##dialog start -->
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="userModal">
       <md-dialog-title>{{dialog.header}}</md-dialog-title>

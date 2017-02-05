@@ -40,8 +40,8 @@ Vue.material.registerTheme('default', {
   background: 'white',
 });
 
-// Vue.http.options.root = 'http://localhost:8080';
-Vue.http.options.root = 'http://hew.abct.io';
+Vue.http.options.root = 'http://localhost:8080';
+// Vue.http.options.root = 'http://hew.abct.io';
 
 Vue.router = new VueRouter({
   // mode: 'history',
@@ -56,18 +56,6 @@ Vue.router = new VueRouter({
     { path: '/restaurants/:id', name: 'restaurant-info', component: RestaurantMenu },
     { path: '/admin/events', component: ManageEvents, meta: { auth: 'admin' }, },
   ],
-});
-
-Vue.use(require('@websanova/vue-auth'), {
-  auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
-  http: require('@websanova/vue-auth/drivers/http/vue-resource.1.x.js'),
-  router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
-  rolesVar: 'role',
-  loginData: { url: 'login', fetchUser: false },
-  refreshData: {
-    atInit: false,
-    enabled: false, // true by default.
-  },
 });
 
 /* eslint-disable no-new */

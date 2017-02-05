@@ -56,7 +56,8 @@
       },
       addMenu(ref) {
         const order = {
-          user_id: this.$auth.user().id,
+          // user_id: this.$auth.user().id,
+          user_id: '',
           menu_id: +this.newMenu.id,
           activity_id: +this.activity.id,
         };

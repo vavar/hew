@@ -28,7 +28,7 @@
         <md-toolbar class="md-accent">
           <h1 class="md-title md-left-align">
             <md-icon>store</md-icon> {{restaurant.name}}</h1>
-          <md-button v-if="$auth.check('admin')" class="md-icon-button md-raised md-warn" id="custom" @click="openModal('menuModal')">
+          <md-button class="md-icon-button md-raised md-warn" id="custom" @click="openModal('menuModal')">
             <md-icon>playlist_add</md-icon>
           </md-button>
         </md-toolbar>
@@ -37,7 +37,7 @@
             <md-table-row>
               <md-table-head md-sort-by="name">Menu</md-table-head>
               <md-table-head md-sort-by="price">price</md-table-head>
-              <md-table-head v-if="$auth.check('admin')">action</md-table-head>
+              <md-table-head >action</md-table-head>
             </md-table-row>
           </md-table-header>
 
@@ -46,7 +46,7 @@
               <md-table-cell v-for="(column, columnIndex) in [row.name, row.price]" :key="columnIndex">
                 {{ column }}
               </md-table-cell>
-              <md-table-cell v-if="$auth.check('admin')">
+              <md-table-cell>
                 <md-button class="md-icon-button" @click="openEditModal('menuModal',row)">
                   <md-icon>create</md-icon>
                 </md-button>

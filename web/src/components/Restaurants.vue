@@ -28,7 +28,7 @@
         <md-toolbar>
           <h1 class="md-title"><md-icon>business</md-icon> <span>Restaurants</span></h1>
           <span class="md-title-gutter"></span>
-          <md-button v-if="$auth.check('admin')" class="md-icon-button md-raised md-accent" id="custom" @click="openModal('restaurantModal')">
+          <md-button class="md-icon-button md-raised md-accent" id="custom" @click="openModal('restaurantModal')">
             <md-icon>add</md-icon>
           </md-button>
         </md-toolbar>
@@ -41,10 +41,10 @@
               <span>{{row.name}}<sup>[{{row.id}}]</sup></span>
               <span>{{row.phone || '%phone number%'}}</span>
             </div>
-            <md-button v-if="$auth.check('admin')" class="md-icon-button md-list-action" @click="openEditModal('restaurantModal',rowIndex)">
+            <md-button class="md-icon-button md-list-action" @click="openEditModal('restaurantModal',rowIndex)">
               <md-icon>create</md-icon>
             </md-button>
-            <md-button v-if="$auth.check('admin')" class="md-icon-button md-list-action">
+            <md-button class="md-icon-button md-list-action">
               <md-icon>schedule</md-icon>
             </md-button>
           </md-list-item>

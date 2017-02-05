@@ -9,7 +9,7 @@ import (
 
 	"net/http"
 
-	"./jwt"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/spf13/viper"
 	cors "gopkg.in/gin-contrib/cors.v1"
 	"gopkg.in/gin-gonic/gin.v1"
@@ -25,9 +25,9 @@ func errorJSON(c *gin.Context, statusCode int, err error) {
 }
 
 func main() {
-	env := os.Getenv("ENVIRONMENT")
+	env := os.Getenv("PROFILE")
 	viper.SetConfigName(env)
-	viper.AddConfigPath("config")
+	viper.AddConfigPath("./config")
 
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -45,7 +45,7 @@ func main() {
 	router.Use(cors.New(corsConfig))
 
 	// the jwt middleware
-	authMiddleware := &jwt.GinJWTMiddleware{
+	authMiddleware := &GinJWTMiddleware{
 		Realm:      "Hew Platform zone",
 		Key:        []byte("Hew leaw tae mai ru ja gin arai"),
 		Timeout:    time.Hour,

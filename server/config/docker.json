@@ -1,0 +1,7 @@
+{
+    "db": {
+        "host": "db",
+        "user": "hew",
+        "dbname": "hew"
+    }
+}

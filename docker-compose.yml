@@ -12,3 +12,14 @@ services:
             PGDATA: /db
         ports:
             - "5432:5432"
+    server:
+        build: 
+            context: ./server
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+            - "8081:8080"
+        environment: 
+            PROFILE: 'docker'
+        volumes:
+            - ./server:/go/src/app

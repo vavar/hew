@@ -11,12 +11,12 @@
         <span>Hew</span>
       </h2>
       <span class="md-title-gutter"></span>
-      <div v-if="$auth.check()" class="profile-panel">
+      <div class="profile-panel">
         <md-avatar>
           <img v-bind:src="gavatar()">
         </md-avatar>
         <ul>
-          <li><span>{{$auth.user().email}}</span></li>
+          <li><span>EMAIL</span></li>
           <li><a @click="onLogout()" class="md-raised md-accent">Log out</a></li>
         </ul>
       </div>
@@ -58,12 +58,12 @@
       close() {
       },
       gavatar() {
-        const email = this.$auth.user().email;
-        if (!email ) {
-          return 'http://lorempixel.com/128/128/people';
-        }
-        const md5string = aCrypto.createHash('md5').update(email.toLowerCase()).digest('hex')
-        return `https://s.gravatar.com/avatar/${md5string}?s=80`;
+        // const email = this.$auth.user().email;
+        // if (!email ) {
+        //   return 'http://lorempixel.com/128/128/people';
+        // }
+        // const md5string = aCrypto.createHash('md5').update(email.toLowerCase()).digest('hex')
+        // return `https://s.gravatar.com/avatar/${md5string}?s=80`;
       },
       gotoHome() {
         this.$router.push({ path: '/' });
@@ -72,13 +72,13 @@
         this.$router.push({ path: '/login' });
       },
       onLogout() {
-        this.$auth.logout({
-          makeRequest: true,
-          params: {},
-          success: function () { },
-          error: function () { },
-          redirect: '/login',
-        });
+        // this.$auth.logout({
+        //   makeRequest: true,
+        //   params: {},
+        //   success: function () { },
+        //   error: function () { },
+        //   redirect: '/login',
+        // });
       }
     },
     components: {

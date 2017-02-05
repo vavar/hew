@@ -6,7 +6,7 @@
     <md-toolbar class="md-transparent">
       <h2 class="md-title md-left-align ">Order List</h2>
       <span style="flex:1"></span>
-      <add-order v-if="$auth.check()" :activity="activity"></add-order>
+      <add-order :activity="activity"></add-order>
     </md-toolbar>
     <md-table md-sort="restaurant" md-sort-type="desc" @sort="onSort">
       <md-table-header>
@@ -15,7 +15,7 @@
           <md-table-head md-sort-by="restaurant">Restaurant</md-table-head>
           <md-table-head md-sort-by="restaurant">Menu</md-table-head>
           <md-table-head md-sort-by="restaurant">Price</md-table-head>
-          <md-table-head v-if="$auth.check()">action</md-table-head>
+          <md-table-head >action</md-table-head>
         </md-table-row>
       </md-table-header>
       <md-table-body>
@@ -32,7 +32,7 @@
           <md-table-cell>
             <div>{{row.price || '-'}}</div>
           </md-table-cell>
-          <md-table-cell v-if="$auth.check()">
+          <md-table-cell >
             <md-button class="md-icon-button" v-if="isOwnerOrder(row.user_id)" v-on:click="removeUser(row.user_id, row.menu_id)">
               <md-icon >delete</md-icon>
             </md-button>
@@ -80,7 +80,7 @@
         this.child(this.menu['.key']).remove();
       },
       isOwnerOrder(id) {
-        return id === this.$auth.user().id || this.$auth.check('admin');
+        return false;//id === this.$auth.user().id || this.$auth.check('admin');
       },
       onSort() {
 

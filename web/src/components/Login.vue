@@ -41,17 +41,17 @@ export default {
   },
   methods: {
     login() {
-      this.$auth.login({
-        body: this.data.body,
-        redirect: {name: 'home'},
-        success(res) {
-          const user = res.data.data;
-          this.$auth.user(user);
-        },
-        error(res) {
-          this.error = res.data;
-        }
-      });
+      // this.$auth.login({
+      //   body: this.data.body,
+      //   redirect: {name: 'home'},
+      //   success(res) {
+      //     const user = res.data.data;
+      //     this.$auth.user(user);
+      //   },
+      //   error(res) {
+      //     this.error = res.data;
+      //   }
+      // });
     }
   },
 };

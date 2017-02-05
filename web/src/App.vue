@@ -1,5 +1,5 @@
 <template>
-  <div class="app-viewport" id="app" v-if="$auth.ready()">
+  <div class="app-viewport" id="app">
     <navbar></navbar>
     <div class="wrapper">
       <transition name="md-router" appear>

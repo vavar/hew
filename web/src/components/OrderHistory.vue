@@ -7,7 +7,7 @@
           <h2 class="md-title">History</h2>
           <span class="md-title-gutter"></span>
           <div>
-            <md-button v-if="$auth.check('user')" @click="exportExcel(history)" class="md-icon-button">
+            <md-button @click="exportExcel(history)" class="md-icon-button">
               <md-icon>import_export</md-icon>
             </md-button>
             <div>
@@ -55,7 +55,7 @@
     },
     methods: {
       fetchData() {
-        this.$store.dispatch('getOrderHistory', this.$auth.user().id);
+        // this.$store.dispatch('getOrderHistory', this.$auth.user().id);
       },
       exportExcel(history) {
         if (!history || history.length == 0) {
